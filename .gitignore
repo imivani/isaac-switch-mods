@@ -1,0 +1,13 @@
+dist/
+native/build/
+native/deploy/
+native/native.elf
+native/native.nso
+test-build/
+native-test-build/
+__pycache__/
+*.pyc
+evidence/
+reference/
+deployments/
+../Isaac-dump/

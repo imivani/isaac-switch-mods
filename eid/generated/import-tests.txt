@@ -1,0 +1,14 @@
+test_complete_category_ranges_and_special_pill_key (__main__.ImportTests.test_complete_category_ranges_and_special_pill_key) ... ok
+test_cpp_strings_do_not_form_trigraphs (__main__.ImportTests.test_cpp_strings_do_not_form_trigraphs) ... ok
+test_lua_reader_preserves_escaped_text (__main__.ImportTests.test_lua_reader_preserves_escaped_text) ... ok
+test_markup_and_text_remain_verbatim (__main__.ImportTests.test_markup_and_text_remain_verbatim) ... ok
+test_pill_effect_and_color_are_not_confused (__main__.ImportTests.test_pill_effect_and_color_are_not_confused) ... ok
+test_placeholder_slots_are_marked (__main__.ImportTests.test_placeholder_slots_are_marked) ... ok
+test_rebuild_matches_checked_outputs (__main__.ImportTests.test_rebuild_matches_checked_outputs) ... ok
+test_repentance_overrides_replace_base (__main__.ImportTests.test_repentance_overrides_replace_base) ... ok
+test_unknown_lua_code_is_rejected (__main__.ImportTests.test_unknown_lua_code_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.258s
+
+OK

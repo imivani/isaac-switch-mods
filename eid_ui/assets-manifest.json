@@ -1,0 +1,91 @@
+{
+  "source_url": "https://github.com/wofsauge/External-Item-Descriptions",
+  "source_commit": "8b59d00c6828e333294639ad2b2b6875eae821cb",
+  "source_sha256": {
+    "features/eid_data.lua": "aae00c8f26b5d9803d236979a609ece48e01bbe4709c7f4474278dbdd5f92365",
+    "resources/font/eid_default.fnt": "f0865eb462b76a608558bfc1b9991d6e8258fdb343ad42380afbd9c210571341",
+    "resources/gfx/eid_inline_icons.anm2": "90391550d64c406a5730934d2e9186d6a0f53f1c537e34c8bddaeb0a893fd105",
+    "resources/gfx/eid_inline_icons.png": "45999e3a87d39d56cb2731c6028ed63f94b0e49b77c7082e72a6a7d374200f8c",
+    "resources/gfx/eid_player_icons.anm2": "9d1b2eaf3865bfc65789eb77aabc47df531e5ebae26bcdc70fcde1a6709d370a",
+    "resources/gfx/eid_player_icons.png": "a431402d2c9966b7a969cbf22b16c8982f1270e7ae9a22a5660d455fc7498338",
+    "resources/gfx/eid_transform_icons.anm2": "804a11eaeb1602387849f76981e5ee6f4cb4d1a322a304f6d72db2f6ed7e4fb7",
+    "resources/gfx/eid_transform_icons.png": "5d2816bfe172c50382d2531cced428aea76474ae8cc68911abd09af0563bb8c0",
+    "resources/gfx/eid_cardspills.anm2": "961e3aa0412a5fbc6add76a2762482b9c4888723ef5e31706dd07d73d151d69d",
+    "resources/gfx/eid_cardspills.png": "f2911e044b6480a59a54457910475f31ad5719434488c578bae383f45d9fe593",
+    "resources/font/eid_default_0.png": "0a3aeec5bb3dc069c723d64ee4a3d507721c53b3c08dd9bea8950e319f5c24ca",
+    "resources/font/eid_default_1.png": "34b0230ab6f1bd47579f06e98d377cda135896a57f1ab1d17ef187a0b217d3fa"
+  },
+  "logical_root": "gfx/codex_eid_ui",
+  "texture_conversion": "Parent stages these PNGs as compatible Switch textures; ANM2 keeps logical .png names.",
+  "files": [
+    {
+      "source": "resources/gfx/codex_eid_ui/eid_cardspills.anm2",
+      "logical_path": "gfx/codex_eid_ui/eid_cardspills.anm2",
+      "sha256": "961e3aa0412a5fbc6add76a2762482b9c4888723ef5e31706dd07d73d151d69d"
+    },
+    {
+      "source": "resources/gfx/codex_eid_ui/eid_cardspills.png",
+      "logical_path": "gfx/codex_eid_ui/eid_cardspills.png",
+      "sha256": "f2911e044b6480a59a54457910475f31ad5719434488c578bae383f45d9fe593"
+    },
+    {
+      "source": "resources/gfx/codex_eid_ui/eid_default_0.png",
+      "logical_path": "gfx/codex_eid_ui/eid_default_0.png",
+      "sha256": "0a3aeec5bb3dc069c723d64ee4a3d507721c53b3c08dd9bea8950e319f5c24ca"
+    },
+    {
+      "source": "resources/gfx/codex_eid_ui/eid_default_1.png",
+      "logical_path": "gfx/codex_eid_ui/eid_default_1.png",
+      "sha256": "34b0230ab6f1bd47579f06e98d377cda135896a57f1ab1d17ef187a0b217d3fa"
+    },
+    {
+      "source": "resources/gfx/codex_eid_ui/eid_glyphs.anm2",
+      "logical_path": "gfx/codex_eid_ui/eid_glyphs.anm2",
+      "sha256": "b77bcaa08c4643c517bc88cae0ed2a5283fdcc31ce30cff5686c06657daa1da2"
+    },
+    {
+      "source": "resources/gfx/codex_eid_ui/eid_inline_icons.anm2",
+      "logical_path": "gfx/codex_eid_ui/eid_inline_icons.anm2",
+      "sha256": "90391550d64c406a5730934d2e9186d6a0f53f1c537e34c8bddaeb0a893fd105"
+    },
+    {
+      "source": "resources/gfx/codex_eid_ui/eid_inline_icons.png",
+      "logical_path": "gfx/codex_eid_ui/eid_inline_icons.png",
+      "sha256": "45999e3a87d39d56cb2731c6028ed63f94b0e49b77c7082e72a6a7d374200f8c"
+    },
+    {
+      "source": "resources/gfx/codex_eid_ui/eid_player_icons.anm2",
+      "logical_path": "gfx/codex_eid_ui/eid_player_icons.anm2",
+      "sha256": "9d1b2eaf3865bfc65789eb77aabc47df531e5ebae26bcdc70fcde1a6709d370a"
+    },
+    {
+      "source": "resources/gfx/codex_eid_ui/eid_player_icons.png",
+      "logical_path": "gfx/codex_eid_ui/eid_player_icons.png",
+      "sha256": "a431402d2c9966b7a969cbf22b16c8982f1270e7ae9a22a5660d455fc7498338"
+    },
+    {
+      "source": "resources/gfx/codex_eid_ui/eid_transform_icons.anm2",
+      "logical_path": "gfx/codex_eid_ui/eid_transform_icons.anm2",
+      "sha256": "804a11eaeb1602387849f76981e5ee6f4cb4d1a322a304f6d72db2f6ed7e4fb7"
+    },
+    {
+      "source": "resources/gfx/codex_eid_ui/eid_transform_icons.png",
+      "logical_path": "gfx/codex_eid_ui/eid_transform_icons.png",
+      "sha256": "5d2816bfe172c50382d2531cced428aea76474ae8cc68911abd09af0563bb8c0"
+    },
+    {
+      "source": "resources/gfx/codex_eid_ui/item_icon.anm2",
+      "logical_path": "gfx/codex_eid_ui/item_icon.anm2",
+      "sha256": "acd5236fe30fe05303b03bc4de3b1c73ced2d51c44fdfc88cd917c3408c41754"
+    }
+  ],
+  "native_game_assets": [
+    "gfx/ui/buttons.anm2"
+  ],
+  "glyphs": 99,
+  "icons": 281,
+  "unclassified_markup": [],
+  "missing_codepoints": [
+    8226
+  ]
+}

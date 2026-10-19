@@ -1,0 +1,3183 @@
+{
+  "items": [
+    {
+      "tag": "active",
+      "id": 78,
+      "attribute": "devilprice",
+      "switch": null,
+      "new": "2",
+      "reason": "Book of Revelations costs 2 hearts in a devil deal"
+    },
+    {
+      "tag": "active",
+      "id": 111,
+      "attribute": "chargetype",
+      "switch": null,
+      "new": "timed",
+      "reason": "The Bean recharges after 4 seconds instead of a room"
+    },
+    {
+      "tag": "active",
+      "id": 111,
+      "attribute": "maxcharges",
+      "switch": "1",
+      "new": "120",
+      "reason": "The Bean recharges after 4 seconds instead of a room"
+    },
+    {
+      "tag": "active",
+      "id": 294,
+      "attribute": "maxcharges",
+      "switch": "90",
+      "new": "60",
+      "reason": "Butter Bean recharges in 2 seconds (was 3)"
+    },
+    {
+      "tag": "active",
+      "id": 386,
+      "attribute": "shopprice",
+      "switch": null,
+      "new": "10",
+      "reason": "D12 is cheaper in the Greed Mode shop"
+    },
+    {
+      "tag": "active",
+      "id": 421,
+      "attribute": "chargetype",
+      "switch": null,
+      "new": "timed",
+      "reason": "Kidney Bean recharges after 4 seconds instead of a room"
+    },
+    {
+      "tag": "active",
+      "id": 421,
+      "attribute": "maxcharges",
+      "switch": "1",
+      "new": "120",
+      "reason": "Kidney Bean recharges after 4 seconds instead of a room"
+    },
+    {
+      "tag": "active",
+      "id": 477,
+      "attribute": "maxcharges",
+      "switch": "6",
+      "new": "4",
+      "reason": "Void recharges in 4 rooms (was 6)"
+    },
+    {
+      "tag": "active",
+      "id": 478,
+      "attribute": "shopprice",
+      "switch": null,
+      "new": "10",
+      "reason": "Pause is cheaper in the Greed Mode shop"
+    },
+    {
+      "tag": "familiar",
+      "id": 651,
+      "attribute": "devilprice",
+      "switch": null,
+      "new": "2",
+      "reason": "Star of Bethlehem costs 2 hearts in a devil deal"
+    },
+    {
+      "tag": "passive",
+      "id": 243,
+      "attribute": "devilprice",
+      "switch": "2",
+      "new": null,
+      "reason": "Trinity Shield costs 1 heart in a devil deal (was 2)"
+    },
+    {
+      "tag": "passive",
+      "id": 374,
+      "attribute": "devilprice",
+      "switch": null,
+      "new": "2",
+      "reason": "Holy Light costs 2 hearts in a devil deal"
+    },
+    {
+      "tag": "passive",
+      "id": 533,
+      "attribute": "devilprice",
+      "switch": null,
+      "new": "2",
+      "reason": "Trisagion costs 2 hearts in a devil deal"
+    },
+    {
+      "tag": "passive",
+      "id": 594,
+      "attribute": "hearts",
+      "switch": "1",
+      "new": "4",
+      "reason": "Jupiter heals 2 red hearts on pickup (was half a heart)"
+    },
+    {
+      "tag": "passive",
+      "id": 606,
+      "attribute": "devilprice",
+      "switch": "2",
+      "new": null,
+      "reason": "Ocular Rift costs 1 heart in a devil deal (was 2)"
+    },
+    {
+      "tag": "passive",
+      "id": 643,
+      "attribute": "soulhearts",
+      "switch": "4",
+      "new": null,
+      "reason": "Revelation no longer grants 2 soul hearts"
+    }
+  ],
+  "metadata": [
+    {
+      "tag": "item",
+      "id": 2,
+      "attribute": "craftquality",
+      "switch": null,
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 2,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "3"
+    },
+    {
+      "tag": "item",
+      "id": 5,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "3"
+    },
+    {
+      "tag": "item",
+      "id": 9,
+      "attribute": "tags",
+      "switch": "poop summonable nocantrip fly",
+      "new": "poop summonable offensive nocantrip fly"
+    },
+    {
+      "tag": "item",
+      "id": 10,
+      "attribute": "tags",
+      "switch": "summonable monstermanual fly",
+      "new": "summonable fly"
+    },
+    {
+      "tag": "item",
+      "id": 11,
+      "attribute": "tags",
+      "switch": "mushroom",
+      "new": "uniquefamiliar mushroom"
+    },
+    {
+      "tag": "item",
+      "id": 13,
+      "attribute": "tags",
+      "switch": "nolostbr summonable syringe",
+      "new": "summonable syringe offensive"
+    },
+    {
+      "tag": "item",
+      "id": 17,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 20,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 21,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 33,
+      "attribute": "tags",
+      "switch": "book offensive angel",
+      "new": "nolostbr book angel"
+    },
+    {
+      "tag": "item",
+      "id": 35,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 38,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 39,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 48,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 54,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 57,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 58,
+      "attribute": "craftquality",
+      "switch": null,
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 58,
+      "attribute": "tags",
+      "switch": "book offensive",
+      "new": "book"
+    },
+    {
+      "tag": "item",
+      "id": 62,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 64,
+      "attribute": "craftquality",
+      "switch": "3",
+      "new": null
+    },
+    {
+      "tag": "item",
+      "id": 65,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 66,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 72,
+      "attribute": "tags",
+      "switch": "nolostbr nocantrip angel",
+      "new": "tearsup offensive nocantrip angel"
+    },
+    {
+      "tag": "item",
+      "id": 73,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 74,
+      "attribute": "craftquality",
+      "switch": "1",
+      "new": null
+    },
+    {
+      "tag": "item",
+      "id": 81,
+      "attribute": "craftquality",
+      "switch": null,
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 86,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 88,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 97,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 99,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 101,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "3"
+    },
+    {
+      "tag": "item",
+      "id": 112,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 113,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 115,
+      "attribute": "tags",
+      "switch": "nolostbr summonable",
+      "new": "offensive summonable tearsup"
+    },
+    {
+      "tag": "item",
+      "id": 125,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 131,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 133,
+      "attribute": "craftquality",
+      "switch": null,
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 135,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 136,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 137,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 138,
+      "attribute": "tags",
+      "switch": "summonable",
+      "new": "nolostbr summonable"
+    },
+    {
+      "tag": "item",
+      "id": 148,
+      "attribute": "tags",
+      "switch": "nolostbr summonable",
+      "new": "nolostbr summonable fly"
+    },
+    {
+      "tag": "item",
+      "id": 160,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 161,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 170,
+      "attribute": "tags",
+      "switch": "summonable spider offensive",
+      "new": "summonable spider monstermanual offensive"
+    },
+    {
+      "tag": "item",
+      "id": 174,
+      "attribute": "tags",
+      "switch": "summonable baby offensive",
+      "new": "summonable baby monstermanual offensive"
+    },
+    {
+      "tag": "item",
+      "id": 181,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "3"
+    },
+    {
+      "tag": "item",
+      "id": 188,
+      "attribute": "tags",
+      "switch": "summonable baby offensive",
+      "new": "summonable baby monstermanual offensive"
+    },
+    {
+      "tag": "item",
+      "id": 189,
+      "attribute": "tags",
+      "switch": "summonable offensive",
+      "new": "summonable tearsup offensive"
+    },
+    {
+      "tag": "item",
+      "id": 195,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 198,
+      "attribute": "craftquality",
+      "switch": "1",
+      "new": null
+    },
+    {
+      "tag": "item",
+      "id": 202,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 206,
+      "attribute": "craftquality",
+      "switch": null,
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 206,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 207,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 208,
+      "attribute": "craftquality",
+      "switch": null,
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 209,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 215,
+      "attribute": "tags",
+      "switch": "summonable offensive lazarussharedglobal",
+      "new": "summonable offensive nogreed lazarussharedglobal"
+    },
+    {
+      "tag": "item",
+      "id": 222,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 236,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 241,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 246,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 255,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 259,
+      "attribute": "craftquality",
+      "switch": null,
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 264,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 272,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 273,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 278,
+      "attribute": "tags",
+      "switch": "summonable",
+      "new": "summonable offensive"
+    },
+    {
+      "tag": "item",
+      "id": 279,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 281,
+      "attribute": "tags",
+      "switch": "summonable",
+      "new": "summonable monstermanual"
+    },
+    {
+      "tag": "item",
+      "id": 282,
+      "attribute": "tags",
+      "switch": "book",
+      "new": "nolostbr book nocantrip"
+    },
+    {
+      "tag": "item",
+      "id": 283,
+      "attribute": "craftquality",
+      "switch": null,
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 283,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 284,
+      "attribute": "craftquality",
+      "switch": null,
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 284,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 287,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 289,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 292,
+      "attribute": "quality",
+      "switch": "4",
+      "new": "3"
+    },
+    {
+      "tag": "item",
+      "id": 292,
+      "attribute": "tags",
+      "switch": "nolostbr book",
+      "new": "book offensive"
+    },
+    {
+      "tag": "item",
+      "id": 293,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 294,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 295,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 296,
+      "attribute": "craftquality",
+      "switch": null,
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 296,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 324,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 325,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 329,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 330,
+      "attribute": "craftquality",
+      "switch": null,
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 336,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 348,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 363,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 367,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 368,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 368,
+      "attribute": "tags",
+      "switch": "summonable offensive",
+      "new": "summonable tearsup offensive"
+    },
+    {
+      "tag": "item",
+      "id": 372,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 384,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 387,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 390,
+      "attribute": "tags",
+      "switch": "summonable baby monstermanual offensive",
+      "new": "summonable baby monstermanual offensive angel"
+    },
+    {
+      "tag": "item",
+      "id": 394,
+      "attribute": "craftquality",
+      "switch": null,
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 394,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 396,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 397,
+      "attribute": "tags",
+      "switch": "summonable offensive",
+      "new": "summonable tearsup offensive"
+    },
+    {
+      "tag": "item",
+      "id": 400,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 406,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 412,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 420,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 421,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 422,
+      "attribute": "tags",
+      "switch": "offensive nocantrip",
+      "new": "nocantrip"
+    },
+    {
+      "tag": "item",
+      "id": 426,
+      "attribute": "tags",
+      "switch": "summonable offensive fly",
+      "new": "summonable monstermanual offensive fly"
+    },
+    {
+      "tag": "item",
+      "id": 431,
+      "attribute": "tags",
+      "switch": "summonable baby offensive",
+      "new": "summonable baby monstermanual offensive"
+    },
+    {
+      "tag": "item",
+      "id": 433,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 436,
+      "attribute": "tags",
+      "switch": "uniquefamiliar nolostbr summonable",
+      "new": "uniquefamiliar nolostbr summonable tearsup"
+    },
+    {
+      "tag": "item",
+      "id": 437,
+      "attribute": "tags",
+      "switch": "offensive",
+      "new": "offensive nogreed"
+    },
+    {
+      "tag": "item",
+      "id": 452,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 474,
+      "attribute": "tags",
+      "switch": "",
+      "new": "noeden"
+    },
+    {
+      "tag": "item",
+      "id": 477,
+      "attribute": "quality",
+      "switch": "4",
+      "new": "3"
+    },
+    {
+      "tag": "item",
+      "id": 478,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 480,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 482,
+      "attribute": "tags",
+      "switch": "nolostbr nochallenge nodaily",
+      "new": "nolostbr nochallenge"
+    },
+    {
+      "tag": "item",
+      "id": 486,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 490,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 493,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 500,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 505,
+      "attribute": "tags",
+      "switch": "offensive nocantrip",
+      "new": "summonable offensive nocantrip nogreed"
+    },
+    {
+      "tag": "item",
+      "id": 508,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 516,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 518,
+      "attribute": "tags",
+      "switch": "summonable baby offensive",
+      "new": "summonable baby monstermanual offensive"
+    },
+    {
+      "tag": "item",
+      "id": 519,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 519,
+      "attribute": "tags",
+      "switch": "summonable monstermanual offensive",
+      "new": "summonable baby monstermanual offensive"
+    },
+    {
+      "tag": "item",
+      "id": 520,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 525,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 526,
+      "attribute": "tags",
+      "switch": "summonable offensive",
+      "new": "summonable monstermanual offensive"
+    },
+    {
+      "tag": "item",
+      "id": 530,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 530,
+      "attribute": "tags",
+      "switch": "summonable offensive",
+      "new": "summonable offensive lazarusshared"
+    },
+    {
+      "tag": "item",
+      "id": 532,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "3"
+    },
+    {
+      "tag": "item",
+      "id": 536,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 539,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 542,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 544,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 545,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 546,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 547,
+      "attribute": "tags",
+      "switch": "summonable offensive",
+      "new": "summonable tearsup offensive"
+    },
+    {
+      "tag": "item",
+      "id": 549,
+      "attribute": "tags",
+      "switch": "nolostbr",
+      "new": "offensive tearsup"
+    },
+    {
+      "tag": "item",
+      "id": 554,
+      "attribute": "tags",
+      "switch": "summonable",
+      "new": "summonable tearsup"
+    },
+    {
+      "tag": "item",
+      "id": 555,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 556,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 560,
+      "attribute": "tags",
+      "switch": "nolostbr summonable",
+      "new": "nolostbr summonable tearsup"
+    },
+    {
+      "tag": "item",
+      "id": 562,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "4"
+    },
+    {
+      "tag": "item",
+      "id": 563,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 564,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 565,
+      "attribute": "tags",
+      "switch": "offensive",
+      "new": "summonable monstermanual offensive"
+    },
+    {
+      "tag": "item",
+      "id": 568,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 574,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 575,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 577,
+      "attribute": "craftquality",
+      "switch": null,
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 577,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "3"
+    },
+    {
+      "tag": "item",
+      "id": 578,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 580,
+      "attribute": "tags",
+      "switch": "offensive nogreed",
+      "new": "offensive nocantrip nogreed"
+    },
+    {
+      "tag": "item",
+      "id": 582,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 583,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 585,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 589,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "3"
+    },
+    {
+      "tag": "item",
+      "id": 590,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 593,
+      "attribute": "craftquality",
+      "switch": null,
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 593,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 599,
+      "attribute": "tags",
+      "switch": "summonable offensive nocantrip lazarussharedglobal",
+      "new": "summonable offensive nocantrip lazarussharedglobal nogreed"
+    },
+    {
+      "tag": "item",
+      "id": 602,
+      "attribute": "tags",
+      "switch": "summonable offensive",
+      "new": "summonable offensive lazarussharedglobal"
+    },
+    {
+      "tag": "item",
+      "id": 603,
+      "attribute": "craftquality",
+      "switch": "1",
+      "new": null
+    },
+    {
+      "tag": "item",
+      "id": 605,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 606,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 610,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 612,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 612,
+      "attribute": "tags",
+      "switch": "summonable nocantrip",
+      "new": "uniquefamiliar summonable nocantrip"
+    },
+    {
+      "tag": "item",
+      "id": 615,
+      "attribute": "tags",
+      "switch": "summonable",
+      "new": "summonable monstermanual"
+    },
+    {
+      "tag": "item",
+      "id": 616,
+      "attribute": "tags",
+      "switch": "offensive",
+      "new": "summonable offensive"
+    },
+    {
+      "tag": "item",
+      "id": 617,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 622,
+      "attribute": "craftquality",
+      "switch": null,
+      "new": "3"
+    },
+    {
+      "tag": "item",
+      "id": 622,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 631,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 632,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 634,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 637,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 638,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 641,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 650,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 651,
+      "attribute": "tags",
+      "switch": "summonable offensive nocantrip stars",
+      "new": "uniquefamiliar summonable offensive nocantrip stars"
+    },
+    {
+      "tag": "item",
+      "id": 652,
+      "attribute": "tags",
+      "switch": "baby",
+      "new": "summonable baby monstermanual offensive"
+    },
+    {
+      "tag": "item",
+      "id": 653,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 655,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 660,
+      "attribute": "craftquality",
+      "switch": null,
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 665,
+      "attribute": "tags",
+      "switch": "guppy offensive",
+      "new": "dead guppy offensive"
+    },
+    {
+      "tag": "item",
+      "id": 667,
+      "attribute": "craftquality",
+      "switch": null,
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 667,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 667,
+      "attribute": "tags",
+      "switch": "dead offensive",
+      "new": "uniquefamiliar dead offensive"
+    },
+    {
+      "tag": "item",
+      "id": 669,
+      "attribute": "tags",
+      "switch": "summonable offensive lazarussharedglobal",
+      "new": "summonable tearsup offensive lazarussharedglobal"
+    },
+    {
+      "tag": "item",
+      "id": 672,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 674,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 677,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 681,
+      "attribute": "quality",
+      "switch": "1",
+      "new": "0"
+    },
+    {
+      "tag": "item",
+      "id": 682,
+      "attribute": "tags",
+      "switch": "summonable offensive",
+      "new": "summonable monstermanual offensive"
+    },
+    {
+      "tag": "item",
+      "id": 685,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 687,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 692,
+      "attribute": "tags",
+      "switch": "nolostbr summonable",
+      "new": "nolostbr summonable lazarussharedglobal"
+    },
+    {
+      "tag": "item",
+      "id": 695,
+      "attribute": "tags",
+      "switch": "nolostbr summonable",
+      "new": "nolostbr summonable tearsup"
+    },
+    {
+      "tag": "item",
+      "id": 697,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 701,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 703,
+      "attribute": "craftquality",
+      "switch": null,
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 703,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 704,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 705,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 706,
+      "attribute": "quality",
+      "switch": "4",
+      "new": "3"
+    },
+    {
+      "tag": "item",
+      "id": 709,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 710,
+      "attribute": "tags",
+      "switch": "offensive",
+      "new": "offensive nocantrip"
+    },
+    {
+      "tag": "item",
+      "id": 719,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 720,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 722,
+      "attribute": "quality",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "item",
+      "id": 725,
+      "attribute": "tags",
+      "switch": "summonable offensive",
+      "new": "poop summonable offensive"
+    },
+    {
+      "tag": "item",
+      "id": 727,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "item",
+      "id": 729,
+      "attribute": "quality",
+      "switch": "2",
+      "new": "1"
+    },
+    {
+      "tag": "trinket",
+      "id": 16,
+      "attribute": "tags",
+      "switch": "mom",
+      "new": ""
+    },
+    {
+      "tag": "trinket",
+      "id": 17,
+      "attribute": "tags",
+      "switch": "",
+      "new": "nogreed"
+    },
+    {
+      "tag": "trinket",
+      "id": 18,
+      "attribute": "tags",
+      "switch": "",
+      "new": "nogreed"
+    },
+    {
+      "tag": "trinket",
+      "id": 21,
+      "attribute": "tags",
+      "switch": "",
+      "new": "nochallenge"
+    },
+    {
+      "tag": "trinket",
+      "id": 23,
+      "attribute": "tags",
+      "switch": "",
+      "new": "nochallenge"
+    },
+    {
+      "tag": "trinket",
+      "id": 28,
+      "attribute": "tags",
+      "switch": "",
+      "new": "nochallenge"
+    },
+    {
+      "tag": "trinket",
+      "id": 34,
+      "attribute": "tags",
+      "switch": "",
+      "new": "nogreed"
+    },
+    {
+      "tag": "trinket",
+      "id": 38,
+      "attribute": "tags",
+      "switch": "mom",
+      "new": "nogreed"
+    },
+    {
+      "tag": "trinket",
+      "id": 87,
+      "attribute": "tags",
+      "switch": "mom",
+      "new": ""
+    }
+  ],
+  "pools": [
+    {
+      "pool": "devil",
+      "id": 8,
+      "change": "removed",
+      "switch": {
+        "Id": "8",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "devil",
+      "id": 67,
+      "change": "removed",
+      "switch": {
+        "Id": "67",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "devil",
+      "id": 265,
+      "change": "added",
+      "pc": {
+        "Id": "265",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "keyMaster",
+      "id": 17,
+      "change": "added",
+      "pc": {
+        "Id": "17",
+        "Weight": "0.2",
+        "DecreaseBy": "0.1",
+        "RemoveOn": "0.02"
+      }
+    },
+    {
+      "pool": "keyMaster",
+      "id": 274,
+      "change": "added",
+      "pc": {
+        "Id": "274",
+        "Weight": "1",
+        "DecreaseBy": "0.5",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "keyMaster",
+      "id": 511,
+      "change": "added",
+      "pc": {
+        "Id": "511",
+        "Weight": "1",
+        "DecreaseBy": "0.5",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "keyMaster",
+      "id": 623,
+      "change": "added",
+      "pc": {
+        "Id": "623",
+        "Weight": "1",
+        "DecreaseBy": "0.5",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 15,
+      "change": "added",
+      "pc": {
+        "Id": "15",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 19,
+      "change": "added",
+      "pc": {
+        "Id": "19",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 36,
+      "change": "added",
+      "pc": {
+        "Id": "36",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 39,
+      "change": "added",
+      "pc": {
+        "Id": "39",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 40,
+      "change": "added",
+      "pc": {
+        "Id": "40",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 41,
+      "change": "added",
+      "pc": {
+        "Id": "41",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 49,
+      "change": "added",
+      "pc": {
+        "Id": "49",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 66,
+      "change": "added",
+      "pc": {
+        "Id": "66",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 86,
+      "change": "added",
+      "pc": {
+        "Id": "86",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 92,
+      "change": "added",
+      "pc": {
+        "Id": "92",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 113,
+      "change": "added",
+      "pc": {
+        "Id": "113",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 123,
+      "change": "added",
+      "pc": {
+        "Id": "123",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 127,
+      "change": "added",
+      "pc": {
+        "Id": "127",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 129,
+      "change": "added",
+      "pc": {
+        "Id": "129",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 136,
+      "change": "added",
+      "pc": {
+        "Id": "136",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 160,
+      "change": "added",
+      "pc": {
+        "Id": "160",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 171,
+      "change": "added",
+      "pc": {
+        "Id": "171",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 178,
+      "change": "added",
+      "pc": {
+        "Id": "178",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 180,
+      "change": "added",
+      "pc": {
+        "Id": "180",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 202,
+      "change": "added",
+      "pc": {
+        "Id": "202",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 203,
+      "change": "added",
+      "pc": {
+        "Id": "203",
+        "Weight": "0.2",
+        "DecreaseBy": "0.2",
+        "RemoveOn": "0.02"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 211,
+      "change": "added",
+      "pc": {
+        "Id": "211",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 250,
+      "change": "added",
+      "pc": {
+        "Id": "250",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 270,
+      "change": "added",
+      "pc": {
+        "Id": "270",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 272,
+      "change": "added",
+      "pc": {
+        "Id": "272",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 275,
+      "change": "added",
+      "pc": {
+        "Id": "275",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 276,
+      "change": "added",
+      "pc": {
+        "Id": "276",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 294,
+      "change": "added",
+      "pc": {
+        "Id": "294",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 295,
+      "change": "added",
+      "pc": {
+        "Id": "295",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 304,
+      "change": "added",
+      "pc": {
+        "Id": "304",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 314,
+      "change": "added",
+      "pc": {
+        "Id": "314",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 323,
+      "change": "added",
+      "pc": {
+        "Id": "323",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 361,
+      "change": "added",
+      "pc": {
+        "Id": "361",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 381,
+      "change": "added",
+      "pc": {
+        "Id": "381",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 390,
+      "change": "added",
+      "pc": {
+        "Id": "390",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 404,
+      "change": "added",
+      "pc": {
+        "Id": "404",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 416,
+      "change": "removed",
+      "switch": {
+        "Id": "416",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 418,
+      "change": "added",
+      "pc": {
+        "Id": "418",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 427,
+      "change": "added",
+      "pc": {
+        "Id": "427",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 435,
+      "change": "added",
+      "pc": {
+        "Id": "435",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 491,
+      "change": "added",
+      "pc": {
+        "Id": "491",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 492,
+      "change": "added",
+      "pc": {
+        "Id": "492",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 602,
+      "change": "added",
+      "pc": {
+        "Id": "602",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 609,
+      "change": "removed",
+      "switch": {
+        "Id": "609",
+        "Weight": "0.5",
+        "DecreaseBy": "0.5",
+        "RemoveOn": "0.05"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 667,
+      "change": "added",
+      "pc": {
+        "Id": "667",
+        "Weight": "0.5",
+        "DecreaseBy": "0.5",
+        "RemoveOn": "0.05"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 722,
+      "change": "weights",
+      "switch": {
+        "Id": "722",
+        "Weight": "0.1",
+        "DecreaseBy": "0.1",
+        "RemoveOn": "0.01"
+      },
+      "pc": {
+        "Id": "722",
+        "Weight": "0.5",
+        "DecreaseBy": "0.5",
+        "RemoveOn": "0.05"
+      }
+    },
+    {
+      "pool": "greedTreasure",
+      "id": 723,
+      "change": "removed",
+      "switch": {
+        "Id": "723",
+        "Weight": "0.1",
+        "DecreaseBy": "0.1",
+        "RemoveOn": "0.01"
+      }
+    },
+    {
+      "pool": "greedBoss",
+      "id": 15,
+      "change": "removed",
+      "switch": {
+        "Id": "15",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedBoss",
+      "id": 16,
+      "change": "weights",
+      "switch": {
+        "Id": "16",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      },
+      "pc": {
+        "Id": "16",
+        "Weight": "0.2",
+        "DecreaseBy": "0.2",
+        "RemoveOn": "0.02"
+      }
+    },
+    {
+      "pool": "greedBoss",
+      "id": 51,
+      "change": "added",
+      "pc": {
+        "Id": "51",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedBoss",
+      "id": 92,
+      "change": "added",
+      "pc": {
+        "Id": "92",
+        "Weight": "0.5",
+        "DecreaseBy": "0.5",
+        "RemoveOn": "0.05"
+      }
+    },
+    {
+      "pool": "greedBoss",
+      "id": 165,
+      "change": "added",
+      "pc": {
+        "Id": "165",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedBoss",
+      "id": 218,
+      "change": "added",
+      "pc": {
+        "Id": "218",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedBoss",
+      "id": 219,
+      "change": "added",
+      "pc": {
+        "Id": "219",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedBoss",
+      "id": 314,
+      "change": "removed",
+      "switch": {
+        "Id": "314",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedShop",
+      "id": 137,
+      "change": "added",
+      "pc": {
+        "Id": "137",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedShop",
+      "id": 147,
+      "change": "added",
+      "pc": {
+        "Id": "147",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedShop",
+      "id": 164,
+      "change": "added",
+      "pc": {
+        "Id": "164",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedShop",
+      "id": 166,
+      "change": "weights",
+      "switch": {
+        "Id": "166",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      },
+      "pc": {
+        "Id": "166",
+        "Weight": "0.1",
+        "DecreaseBy": "0.1",
+        "RemoveOn": "0.01"
+      }
+    },
+    {
+      "pool": "greedShop",
+      "id": 205,
+      "change": "added",
+      "pc": {
+        "Id": "205",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedShop",
+      "id": 232,
+      "change": "added",
+      "pc": {
+        "Id": "232",
+        "Weight": "0.1",
+        "DecreaseBy": "0.1",
+        "RemoveOn": "0.01"
+      }
+    },
+    {
+      "pool": "greedShop",
+      "id": 290,
+      "change": "added",
+      "pc": {
+        "Id": "290",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedShop",
+      "id": 296,
+      "change": "added",
+      "pc": {
+        "Id": "296",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedShop",
+      "id": 338,
+      "change": "added",
+      "pc": {
+        "Id": "338",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedShop",
+      "id": 347,
+      "change": "added",
+      "pc": {
+        "Id": "347",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedShop",
+      "id": 414,
+      "change": "added",
+      "pc": {
+        "Id": "414",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedShop",
+      "id": 479,
+      "change": "added",
+      "pc": {
+        "Id": "479",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedShop",
+      "id": 521,
+      "change": "added",
+      "pc": {
+        "Id": "521",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedShop",
+      "id": 609,
+      "change": "added",
+      "pc": {
+        "Id": "609",
+        "Weight": "0.5",
+        "DecreaseBy": "0.5",
+        "RemoveOn": "0.05"
+      }
+    },
+    {
+      "pool": "greedCurse",
+      "id": 73,
+      "change": "removed",
+      "switch": {
+        "Id": "73",
+        "Weight": "1",
+        "DecreaseBy": "0.5",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedCurse",
+      "id": 134,
+      "change": "added",
+      "pc": {
+        "Id": "134",
+        "Weight": "1",
+        "DecreaseBy": "0.5",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedDevil",
+      "id": 67,
+      "change": "removed",
+      "switch": {
+        "Id": "67",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedDevil",
+      "id": 134,
+      "change": "added",
+      "pc": {
+        "Id": "134",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedDevil",
+      "id": 262,
+      "change": "added",
+      "pc": {
+        "Id": "262",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedDevil",
+      "id": 265,
+      "change": "added",
+      "pc": {
+        "Id": "265",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedDevil",
+      "id": 275,
+      "change": "added",
+      "pc": {
+        "Id": "275",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedDevil",
+      "id": 417,
+      "change": "added",
+      "pc": {
+        "Id": "417",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedDevil",
+      "id": 451,
+      "change": "removed",
+      "switch": {
+        "Id": "451",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedAngel",
+      "id": 33,
+      "change": "added",
+      "pc": {
+        "Id": "33",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedAngel",
+      "id": 98,
+      "change": "added",
+      "pc": {
+        "Id": "98",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedAngel",
+      "id": 101,
+      "change": "added",
+      "pc": {
+        "Id": "101",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedAngel",
+      "id": 108,
+      "change": "added",
+      "pc": {
+        "Id": "108",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedAngel",
+      "id": 124,
+      "change": "added",
+      "pc": {
+        "Id": "124",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedAngel",
+      "id": 142,
+      "change": "added",
+      "pc": {
+        "Id": "142",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedAngel",
+      "id": 146,
+      "change": "added",
+      "pc": {
+        "Id": "146",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedAngel",
+      "id": 332,
+      "change": "added",
+      "pc": {
+        "Id": "332",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedAngel",
+      "id": 374,
+      "change": "added",
+      "pc": {
+        "Id": "374",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "greedAngel",
+      "id": 510,
+      "change": "added",
+      "pc": {
+        "Id": "510",
+        "Weight": "0.4",
+        "DecreaseBy": "0.4",
+        "RemoveOn": "0.04"
+      }
+    },
+    {
+      "pool": "greedAngel",
+      "id": 519,
+      "change": "added",
+      "pc": {
+        "Id": "519",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "bombBum",
+      "id": 223,
+      "change": "added",
+      "pc": {
+        "Id": "223",
+        "Weight": "0.2",
+        "DecreaseBy": "0.1",
+        "RemoveOn": "0.02"
+      }
+    },
+    {
+      "pool": "babyShop",
+      "id": 172,
+      "change": "removed",
+      "switch": {
+        "Id": "172",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "babyShop",
+      "id": 318,
+      "change": "added",
+      "pc": {
+        "Id": "318",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "babyShop",
+      "id": 431,
+      "change": "added",
+      "pc": {
+        "Id": "431",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "babyShop",
+      "id": 539,
+      "change": "added",
+      "pc": {
+        "Id": "539",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "babyShop",
+      "id": 565,
+      "change": "added",
+      "pc": {
+        "Id": "565",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "babyShop",
+      "id": 652,
+      "change": "added",
+      "pc": {
+        "Id": "652",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      }
+    },
+    {
+      "pool": "babyShop",
+      "id": 697,
+      "change": "added",
+      "pc": {
+        "Id": "697",
+        "Weight": "0.5",
+        "DecreaseBy": "0.5",
+        "RemoveOn": "0.05"
+      }
+    },
+    {
+      "pool": "babyShop",
+      "id": 728,
+      "change": "added",
+      "pc": {
+        "Id": "728",
+        "Weight": "0.5",
+        "DecreaseBy": "0.5",
+        "RemoveOn": "0.05"
+      }
+    }
+  ],
+  "pocket": [
+    {
+      "tag": "card",
+      "id": "72",
+      "attribute": "mimiccharge",
+      "switch": "3",
+      "new": "4"
+    },
+    {
+      "tag": "card",
+      "id": "84",
+      "attribute": "mimiccharge",
+      "switch": "3",
+      "new": "2"
+    },
+    {
+      "tag": "pilleffect",
+      "id": "21",
+      "attribute": "mimiccharge",
+      "switch": "6",
+      "new": "4"
+    },
+    {
+      "tag": "pilleffect",
+      "id": "25",
+      "attribute": "greedmode",
+      "switch": null,
+      "new": "false"
+    },
+    {
+      "tag": "pilleffect",
+      "id": "31",
+      "attribute": "greedmode",
+      "switch": null,
+      "new": "false"
+    },
+    {
+      "tag": "rune",
+      "id": "38",
+      "attribute": "mimiccharge",
+      "switch": "2",
+      "new": "4"
+    }
+  ],
+  "excluded": [
+    {
+      "file": "items.xml",
+      "tag": "active",
+      "id": 186,
+      "attribute": "cache",
+      "switch": null,
+      "pc": "firedelay",
+      "reason": "Stat-refresh flags only matter with the Repentance+ stat code behind them"
+    },
+    {
+      "file": "items.xml",
+      "tag": "active",
+      "id": 351,
+      "attribute": "maxcharges",
+      "switch": "3",
+      "pc": "6",
+      "reason": "Mega Bean: 6-charge cost belongs to its reworked room-wide fart"
+    },
+    {
+      "file": "items.xml",
+      "tag": "active",
+      "id": 489,
+      "attribute": "maxcharges",
+      "switch": "2",
+      "pc": "4",
+      "reason": "D Infinity: PC change fixes a charge display; the Switch code owns its real charge"
+    },
+    {
+      "file": "items.xml",
+      "tag": "familiar",
+      "id": 436,
+      "attribute": "persistent",
+      "switch": null,
+      "pc": "true",
+      "reason": "Milk!: part of its familiar rework"
+    },
+    {
+      "file": "items.xml",
+      "tag": "passive",
+      "id": 368,
+      "attribute": "cache",
+      "switch": null,
+      "pc": "firedelay",
+      "reason": "Stat-refresh flags only matter with the Repentance+ stat code behind them"
+    },
+    {
+      "file": "items.xml",
+      "tag": "passive",
+      "id": 554,
+      "attribute": "cache",
+      "switch": "color",
+      "pc": "color firedelay shotspeed",
+      "reason": "Stat-refresh flags only matter with the Repentance+ stat code behind them"
+    },
+    {
+      "file": "items.xml",
+      "tag": "passive",
+      "id": 671,
+      "attribute": "cache",
+      "switch": null,
+      "pc": "all",
+      "reason": "Stat-refresh flags only matter with the Repentance+ stat code behind them"
+    },
+    {
+      "file": "items.xml",
+      "tag": "passive",
+      "id": 686,
+      "attribute": "cache",
+      "switch": null,
+      "pc": "all",
+      "reason": "Stat-refresh flags only matter with the Repentance+ stat code behind them"
+    },
+    {
+      "file": "items.xml",
+      "tag": "trinket",
+      "id": 66,
+      "attribute": "cache",
+      "switch": "range shotspeed",
+      "pc": "range shotspeed damage",
+      "reason": "Stat-refresh flags only matter with the Repentance+ stat code behind them"
+    },
+    {
+      "file": "items.xml",
+      "tag": "trinket",
+      "id": 169,
+      "attribute": "cache",
+      "switch": null,
+      "pc": "flying",
+      "reason": "Stat-refresh flags only matter with the Repentance+ stat code behind them"
+    },
+    {
+      "file": "items_metadata.xml",
+      "tag": "item",
+      "id": 126,
+      "attribute": "tags",
+      "dropped": [
+        "devilsacrifice"
+      ],
+      "reason": "Tag unknown to the Switch 1.7.9b parser"
+    },
+    {
+      "file": "items_metadata.xml",
+      "tag": "item",
+      "id": 157,
+      "attribute": "tags",
+      "dropped": [
+        "devilsacrifice"
+      ],
+      "reason": "Tag unknown to the Switch 1.7.9b parser"
+    },
+    {
+      "file": "items_metadata.xml",
+      "tag": "item",
+      "id": 186,
+      "attribute": "tags",
+      "dropped": [
+        "devilsacrifice"
+      ],
+      "reason": "Tag unknown to the Switch 1.7.9b parser"
+    },
+    {
+      "file": "items_metadata.xml",
+      "tag": "item",
+      "id": 225,
+      "attribute": "tags",
+      "dropped": [
+        "devilsacrifice"
+      ],
+      "reason": "Tag unknown to the Switch 1.7.9b parser"
+    },
+    {
+      "file": "items_metadata.xml",
+      "tag": "item",
+      "id": 569,
+      "attribute": "tags",
+      "dropped": [
+        "devilsacrifice"
+      ],
+      "reason": "Tag unknown to the Switch 1.7.9b parser"
+    },
+    {
+      "file": "items_metadata.xml",
+      "tag": "item",
+      "id": 672,
+      "attribute": "tags",
+      "dropped": [
+        "devilsacrifice"
+      ],
+      "reason": "Tag unknown to the Switch 1.7.9b parser"
+    },
+    {
+      "file": "items_metadata.xml",
+      "tag": "item",
+      "id": 692,
+      "attribute": "tags",
+      "dropped": [
+        "devilsacrifice"
+      ],
+      "reason": "Tag unknown to the Switch 1.7.9b parser"
+    },
+    {
+      "file": "items_metadata.xml",
+      "tag": "item",
+      "id": 695,
+      "attribute": "tags",
+      "dropped": [
+        "devilsacrifice"
+      ],
+      "reason": "Tag unknown to the Switch 1.7.9b parser"
+    },
+    {
+      "file": "items_metadata.xml",
+      "tag": "item",
+      "id": 704,
+      "attribute": "tags",
+      "dropped": [
+        "devilsacrifice"
+      ],
+      "reason": "Tag unknown to the Switch 1.7.9b parser"
+    },
+    {
+      "file": "itempools.xml",
+      "pool": "shop",
+      "id": 177,
+      "switch": {
+        "Id": "177",
+        "Weight": "1",
+        "DecreaseBy": "1",
+        "RemoveOn": "0.1"
+      },
+      "pc": null,
+      "reason": "Portable Slot: its replacement source is reworked code"
+    },
+    {
+      "file": "itempools.xml",
+      "pool": "beggar",
+      "id": 177,
+      "switch": {
+        "Id": "177",
+        "Weight": "1",
+        "DecreaseBy": "0.5",
+        "RemoveOn": "0.1"
+      },
+      "pc": null,
+      "reason": "Portable Slot: its replacement source is reworked code"
+    }
+  ],
+  "sha256": {
+    "items.xml": "79f69c59239db2d44b3672cd60c571e5e75eead163e1b2415b687839ec9f013b",
+    "items_metadata.xml": "a387aa68a2ab25dc0198e97346e7866f4055f466f241a5b6566cfdca779d255c",
+    "itempools.xml": "aed7acacf237cd1941cde830b508899fba04728fc05ac886fc39d76b436969c0",
+    "pocketitems.xml": "5037462d316640aedf2e429ea42723a3839c4f0303dbfbecaa4117f8e7b20105"
+  },
+  "switch_sha256": {
+    "items.xml": "ee567ed920b1bcada61f2a2d65e48563286fe7e8bf00363ad763ac2aa3ae64b7",
+    "items_metadata.xml": "42b3eb47a2f39d7120708ad32a790fc0c1129dd845f3cbdc969d702a5f17152e",
+    "itempools.xml": "da5391ba59626b0fe349fa6d143df82cd7c19c648f04311d8e21a441d5aa502c",
+    "pocketitems.xml": "7217e237b8791354e157c9cc3c6aa104915952831044226d47c68cf25ae4080d"
+  },
+  "pc_sha256": {
+    "items.xml": "37a8d1b2377feef78b5690b859abff23ab81b98b06f1a41c83d4392db35fc556",
+    "items_metadata.xml": "dff50aa979ec67137f2ed1374a50b9386fe98b3935142502bc2630161cf1c6c2",
+    "itempools.xml": "225f4e3db8cce4820b1a78e6aa8998809ab0cb41967e1e780be64b98c594e6e1",
+    "pocketitems.xml": "bc885c6574f5b32993b37b8c337a8ecb8e30665a00f48da20407309c693a1ec9"
+  },
+  "pc_reference": "Steam build 22878971, v1.9.7.17.J460 (afterbirthp.a), local extraction"
+}

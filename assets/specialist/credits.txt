@@ -1,0 +1,5 @@
+The Specialist for Good Items v1.5.2, Steam Workshop 2575911103.
+Jiftoo - programming; Devector - graphics/trailer.
+Original Pog mod by its authors (Workshop 2490515687); MMD skeleton by SAB64.
+Upstream metadata permits modifying/fixing the mod. Original metadata and source hashes are retained in manifest.json.
+This private Switch adaptation preserves the original animation frames and four audio files.

@@ -1,0 +1,2 @@
+<?xml version='1.0' encoding='utf-8'?>
+<music root="codex_specialist/music/"><track name="codex_specialist_classic" path="arcadespecalist.ogg" loop="true" /><track name="codex_specialist_tainted" path="arcadespecalist_b.ogg" loop="true" /><track name="codex_specialist_cain" path="crackhousespecialist.ogg" loop="true" /><track name="codex_specialist_eden" path="arcadespecalist_eden.ogg" loop="true" /></music>
