@@ -22,6 +22,16 @@ Y on the pause screen; saved settings) plus everything in iteration 6. See
 [iteration 7](docs/iteration-7.md) and [the menu](docs/mod-menu.md). It can be
 installed over iteration 5 or 6 with `tools\install-menu-mtp.ps1`.
 Local test results are separate from console confirmation.
+**Iteration 8** (2026-10-25, same `combined-menu` build mode) is written and
+host-tested but **not yet built for the Switch or installed**:
+- readable menu text (an ink palette for EID colours, measured layout, item
+  notes that page instead of running onto the torn edge);
+- item search;
+- the new **Repentance+ Rules** mod (guaranteed Void portals after
+  ???/Lamb/Mega Satan/Mother, Boss Rush wave counter).
+
+See [iteration 8](docs/iteration-8.md), the [console checks](docs/iteration-8-testing.md)
+and [how the rules work](docs/rplus-port.md).
 
 ## Included features
 

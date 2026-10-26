@@ -2,6 +2,7 @@
 #include "native_sprite.hpp"
 #include "generated/build_profile.hpp"
 #include "../../../eid_ui/layout.hpp"
+#include "../../../features/menu_ui/ink.hpp"
 #include <cstdio>
 
 namespace isaac {
@@ -30,12 +31,10 @@ int s_Width{};
 bool s_FontAttempted{}, s_FontReady{}, s_SheetAttempted[5]{}, s_SheetReady[5]{}, s_ItemReady[ItemSlots]{};
 bool s_Ink{};
 
-// On menu paper, light EID text becomes dark ink; coloured text is darkened.
+// On menu paper, light EID text becomes dark ink and each colour its own
+// readable ink (features/menu_ui/ink.hpp).
 std::uint32_t InkColor(std::uint32_t rgb) {
-    if (!s_Ink) return rgb;
-    const unsigned r = (rgb >> 16) & 255, g = (rgb >> 8) & 255, b = rgb & 255;
-    if (r * 299 + g * 587 + b * 114 > 150000 && (r > 200 && g > 200 && b > 200)) return 0x2a1f1d;
-    return ((r * 55 / 100) << 16) | ((g * 55 / 100) << 8) | (b * 55 / 100);
+    return s_Ink ? menu_ui::ink::OnPaper(rgb) : rgb;
 }
 
 FeatureColor Color(std::uint32_t rgb, float alpha = .92f) {
@@ -246,14 +245,19 @@ void DrawEidMenuText(const FeatureFrame& frame, const char* text, float x, float
     if (!frame.module || !text || (s_Module && s_Module != frame.module)) return;
     s_Module = frame.module; PrepareFont();
     const float limit = x + maxWidth;
+    // Too long: stop early enough to end with "..." instead of cutting a word.
+    const bool shorten = EidMenuTextWidth(text) > maxWidth;
+    const auto* dot = Glyph('.');
+    const float stop = shorten ? limit - 3 * (dot ? dot->advance : 3) : limit;
     const char* cursor = text; const char* end = text + std::strlen(text);
     while (cursor < end) {
         const auto code = Decode(cursor,end);
         const auto* glyph = Glyph(code);
         const auto advance = glyph ? glyph->advance : 5;
-        if (x + advance > limit) break;
+        if (x + advance > stop) break;
         DrawGlyph(frame,code,x,y,color); x += advance;
     }
+    if (shorten) for (unsigned i = 0; i < 3; ++i) { DrawGlyph(frame,'.',x,y,color); x += dot ? dot->advance : 3; }
 }
 
 void DrawEidMenuDescription(const FeatureFrame& frame, unsigned item,
@@ -306,10 +310,10 @@ void DrawEidIcon(const FeatureFrame& frame, const char* token, float x, float y)
     if (index >= 0) DrawStatic(frame, static_cast<unsigned>(index), x, y);
 }
 
-void DrawEidMenuBody(const FeatureFrame& frame, const char* markup, float x, float y,
-                     float width, float height, std::uint64_t milliseconds) {
-    if (!frame.module || !markup || width < 40 || height < 10 || (s_Module && s_Module != frame.module)) return;
-    s_Module = frame.module; PrepareFont();
+namespace {
+// Menu body text is laid out once per text and width; drawing and counting
+// lines share the result (and the bounded buffers the overlay also uses).
+void PrepareMenuBody(const char* markup, float width, std::uint64_t milliseconds) {
     const auto selection = static_cast<std::uintptr_t>(0x7e000000u);
     const auto hash = ContentHash("", markup);
     if (selection != s_Selection || hash != s_ContentHash || s_Width != static_cast<int>(width)) {
@@ -319,13 +323,28 @@ void DrawEidMenuBody(const FeatureFrame& frame, const char* markup, float x, flo
         s_Selection = selection; s_ContentHash = hash; s_Width = static_cast<int>(width);
         s_FirstFrame = static_cast<std::int32_t>(milliseconds & 0x7fffffff);
     }
+}
+}
+
+unsigned EidMenuBodyLines(const char* markup, float width, std::uint64_t milliseconds) {
+    if (!markup || width < 40) return 0;
+    PrepareMenuBody(markup, width, milliseconds);
+    return s_Body.line_count;
+}
+
+void DrawEidMenuBody(const FeatureFrame& frame, const char* markup, float x, float y,
+                     float width, float height, std::uint64_t milliseconds, int page) {
+    if (!frame.module || !markup || width < 40 || height < 10 || (s_Module && s_Module != frame.module)) return;
+    s_Module = frame.module; PrepareFont();
+    PrepareMenuBody(markup, width, milliseconds);
     const int available = static_cast<int>(height / LineHeight);
     if (available < 1) return;
     const unsigned rows = static_cast<unsigned>(available);
     const unsigned pages = s_Body.line_count ? (s_Body.line_count + rows - 1) / rows : 1;
+    // The menu picks the page (it shows the page marker); -1 turns pages by itself.
     const unsigned elapsed = (static_cast<unsigned>(milliseconds & 0x7fffffff) - static_cast<unsigned>(s_FirstFrame)) & 0x7fffffffu;
-    const unsigned page = (elapsed / 5000) % pages;
-    DrawLines(frame, s_Body, page * rows, rows, x, y);
+    const unsigned shown = page >= 0 ? static_cast<unsigned>(page) % pages : (elapsed / 5000) % pages;
+    DrawLines(frame, s_Body, shown * rows, rows, x, y);
 }
 
 void ResetEidUi() {

@@ -57,10 +57,16 @@ void DrawEidMenuText(const FeatureFrame&, const char* text, float x, float y, st
 float EidMenuTextWidth(const char* text) { return text ? 5.f * static_cast<float>(std::strlen(text)) : 0; }
 bool s_TestInk{};
 void SetEidInk(bool ink) { s_TestInk = ink; }
-void DrawEidMenuBody(const FeatureFrame& frame, const char* markup, float x, float y, float w, float h, std::uint64_t ms) {
-    CHECK(frame.module == host->module.Address() && markup && w > 40 && h > 10 && ms == host->now && s_TestInk);
+void DrawEidMenuBody(const FeatureFrame& frame, const char* markup, float x, float y, float w, float h, std::uint64_t ms, int page) {
+    CHECK(frame.module == host->module.Address() && markup && w > 40 && h > 10 && ms == host->now && s_TestInk && page >= -1);
     host->draws.push_back({"body", {}, markup, x, y, w});
 }
+// About 50 characters a line at the note's width.
+unsigned EidMenuBodyLines(const char* markup, float width, std::uint64_t) {
+    CHECK(markup && width > 40);
+    return static_cast<unsigned>(std::strlen(markup) / 50 + 1);
+}
+void SetRepentancePlusRules(std::uint8_t rules) { host->rplusRules = rules; }
 void DrawEidIcon(const FeatureFrame&, const char* token, float x, float y) { host->draws.push_back({"icon", {}, token, x, y}); }
 void UpdateInstantBreak(std::uintptr_t game) { CHECK(game == host->game.Address()); ++host->instantTicks; }
 void UpdateSpecialist(std::uintptr_t game) { CHECK(game == host->game.Address()); ++host->specialistTicks; }
@@ -332,7 +338,8 @@ int main() {
     // Settings saved once fully closed, into the game's save data, then committed.
     CHECK(host->fsCreates == 1 && host->fsWrites == 1 && host->fsCommits == 1 && !menu_test::Dirty());
     const auto saved = Saved();
-    CHECK(saved.rfind("isaacmods 1\n", 0) == 0 && saved.find("menu=1,0,1,1,0,60,4") != std::string::npos);
+    CHECK(saved.rfind("isaacmods 2\n", 0) == 0 && saved.find("menu=1,0,1,1,0,60,4") != std::string::npos &&
+          saved.find("rplus=15") != std::string::npos);
     mu::Prefs check;
     CHECK(mu::Parse(saved.data(), static_cast<unsigned>(saved.size()), check) && check.hasMods && !(check.mods & 1) && check.favoriteCount == 1);
     // Nothing changed: closing again writes nothing.

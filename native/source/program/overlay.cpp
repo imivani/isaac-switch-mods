@@ -8,6 +8,7 @@
 #include "item_visuals.hpp"
 #include "mod_settings.hpp"
 #include "hit_counter.hpp"
+#include "rplus.hpp"
 #include "mod_menu.hpp"
 #include "../../../features/clean_map/generated/native.hpp"
 #include "generated/build_profile.hpp"
@@ -107,6 +108,7 @@ void RenderOverlay(std::uintptr_t module, void* hud) {
     if (IsModEnabled(ModFeature::Planetarium)) RenderPlanetarium(frame);
     if (IsModEnabled(ModFeature::BossBars)) RenderBossUi(frame);
     if constexpr (ExtendedFeatures) if (IsModEnabled(ModFeature::HitCounter)) RenderHitCounter(frame);
+    if constexpr (ExtendedFeatures) if (IsModEnabled(ModFeature::RepentancePlus)) RenderBossRushWave(frame);
     if constexpr (ExtendedFeatures) RenderDebugKit(frame);
     if constexpr (ExtendedFeatures) RenderItemVisualsStatus(frame);
     const auto array = Read<std::uintptr_t>(room, RoomEntities);

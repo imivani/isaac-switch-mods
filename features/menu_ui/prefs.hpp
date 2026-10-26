@@ -14,7 +14,10 @@ struct Entry {
     bool operator==(const Entry& o) const { return category == o.category && id == o.id && extra == o.extra; }
 };
 inline constexpr unsigned MaxFavorites = 64, MaxRecents = 10;
-inline constexpr unsigned PrefsVersion = 1;
+// 2: Repentance+ Rules (mod 13) and its rule switches. Mods a version-1 file
+// did not know about start switched on.
+inline constexpr unsigned PrefsVersion = 2;
+inline constexpr std::uint32_t Version1Mods = 0x1fff;
 
 struct Prefs {
     std::uint32_t mods = 0xffffffffu;   // enabled mods, bit = ModFeature
@@ -25,6 +28,7 @@ struct Prefs {
     bool hitFloor = true;
     std::uint8_t timeMachineSteps = 5;  // extra steps per frame, 1..5 (2x..6x)
     bool eidNearby = true, eidMap = true;
+    std::uint8_t rplus = 0xf;           // Repentance+ rules on (features/rplus/policy.hpp bits)
     bool sounds = true, reduceMotion = false, pausePrompt = true;
     std::uint8_t shortcut = 3;          // 0 off, 1 = 0.5 s, 2 = 1 s, 3 = 2 s
     std::uint8_t openTab = 0;           // 0 = last used, otherwise tab + 1
@@ -115,6 +119,7 @@ inline unsigned Serialize(const Prefs& p, char* out, unsigned capacity) {
     put("hit=%d,%d,%u,%u,%u\n", p.hitX, p.hitY, p.hitSize, p.hitOpacity, p.hitFloor ? 1u : 0u);
     put("timemachine=%u\n", p.timeMachineSteps);
     put("eid=%u,%u\n", p.eidNearby ? 1u : 0u, p.eidMap ? 1u : 0u);
+    put("rplus=%u\n", p.rplus);
     put("menu=%u,%u,%u,%u,%u,%u,%u\n", p.sounds ? 1u : 0u, p.reduceMotion ? 1u : 0u, p.pausePrompt ? 1u : 0u,
         p.shortcut, p.openTab, p.dim, p.lastTab);
     put("favorites=");
@@ -172,6 +177,7 @@ inline bool Parse(const char* text, unsigned length, Prefs& out) {
         }
         else if (is("timemachine")) { list(); if (count == 1 && values[0] >= 0 && values[0] < 100) result.timeMachineSteps = static_cast<std::uint8_t>(values[0]); }
         else if (is("eid")) { list(); if (count == 2) { result.eidNearby = values[0] != 0; result.eidMap = values[1] != 0; } }
+        else if (is("rplus")) { list(); if (count == 1 && values[0] >= 0) result.rplus = static_cast<std::uint8_t>(values[0] & 0xf); }
         else if (is("menu")) {
             list();
             if (count == 7) {
@@ -198,6 +204,7 @@ inline bool Parse(const char* text, unsigned length, Prefs& out) {
         }
         p = stop;
     }
+    if (version < 2 && result.hasMods) result.mods |= ~Version1Mods;
     result.Clamp();
     out = result;
     return true;

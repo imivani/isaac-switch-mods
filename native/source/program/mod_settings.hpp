@@ -3,7 +3,7 @@
 namespace isaac {
 enum class ModFeature : unsigned {
     Eid, HitCounter, BossBars, Planetarium, Regret, TimeMachine, MachineLock, GreedNoJam,
-    InstantBreak, Specialist, AnimatedItems, Birthright, CleanMap, Count
+    InstantBreak, Specialist, AnimatedItems, Birthright, CleanMap, RepentancePlus, Count
 };
 inline constexpr unsigned ModCount = static_cast<unsigned>(ModFeature::Count);
 bool IsModEnabled(ModFeature feature);

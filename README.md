@@ -26,9 +26,10 @@ of the game's own menus.
 | **Animated Items** | Moving artwork for 98 items. |
 | **Unique Birthright Sprites** | A different Birthright picture for every character. |
 | **Clean Minimap** | Hides the small map's frame. |
+| **Repentance+ Rules** | Like the PC Repentance+ update: once The Void is unlocked, a Void portal always appears after ???, The Lamb, Mega Satan and Mother (after you've seen her ending); a Boss Rush wave counter. Each rule can be turned off. |
 
 Plus the **mod menu**:
-- **Items:** spawn or give any item, trinket, card, pill or pickup, with filters and favourites.
+- **Items:** spawn or give any item, trinket, card, pill or pickup, with search, filters and favourites.
 - **Mods:** turn each mod on or off, with per-mod settings.
 - **Run:** your seed, stats and item history.
 - **Tools:** health, consumables, map reveal, reroll.
@@ -76,7 +77,8 @@ Full guide with pictures, uninstalling and troubleshooting: [INSTALL.md](INSTALL
 | Main menu → Mods | Press **X** |
 
 **L / R** change page, **A** selects, **Y** opens a mod's settings or marks a
-favourite, **X** opens the item filter, **B** goes back, **+** closes.
+favourite, **X** opens the item filter, **RS** searches items, **LS** shows
+more of a long description, **B** goes back, **+** closes.
 See [docs/mod-menu.md](docs/mod-menu.md).
 
 ## Credits

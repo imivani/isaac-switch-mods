@@ -29,6 +29,8 @@ if($Mode -eq 'combined-menu'){
         & $taskPython (Join-Path $PSScriptRoot ('menu_ui\'+$taskGenerator))
         if($LASTEXITCODE -ne 0){throw "Mod menu generator failed: $taskGenerator"}
     }
+    & $taskPython (Join-Path $PSScriptRoot 'rplus\generate_guards.py')
+    if($LASTEXITCODE -ne 0){throw 'Repentance+ Rules guard generation failed'}
 }
 $taskFeatures=Join-Path $taskProject 'native\source\program\generated\features.hpp'
 $taskDiagnostic=if($Mode -eq 'loader-test'){'true'}else{'false'}

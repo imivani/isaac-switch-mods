@@ -134,18 +134,43 @@ def small_width(text):
     return sum(EID.GLYPHS.get(ord(c), EID.GLYPHS[ord('?')])['advance'] for c in text)
 
 
+# Every text drawn in the current scene: (x, y, width, height, colour, alpha, text, background luminance, layer).
+# A full-screen dim (a card opening over the page) starts a new layer; text behind it is covered.
+DRAWN = []
+LAYER = [0]
+
+
+def luminance(rgb):
+    def channel(c):
+        c /= 255
+        return c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
+    return 0.2126 * channel((rgb >> 16) & 255) + 0.7152 * channel((rgb >> 8) & 255) + 0.0722 * channel(rgb & 255)
+
+
 def text(canvas, p):
     value, font, scale = p['text'], p['f'], p['scale']
-    if font == 3:
-        width = small_width(value)
-    else:
-        width = FONTS[font].width(value, scale)
+    measure = (lambda t, s: small_width(t)) if font == 3 else (lambda t, s: FONTS[font].width(t, s))
+    width, y = measure(value, scale), p['y']
     if p['w'] > 0 and width > p['w']:
-        while value and (small_width(value + '...') if font == 3 else FONTS[font].width(value + '...', scale)) > p['w']:
-            value = value[:-1]
-        value += '...'
-        width = small_width(value) if font == 3 else FONTS[font].width(value, scale)
+        # As mod_menu.cpp DrawText: shrink up to 15%, then shorten with "...".
+        if font != 3:
+            fitted = max(scale * p['w'] / width, p['scale'] * .85)
+            y += (scale - fitted) * 6
+            scale = fitted
+            width = measure(value, scale)
+        if width > p['w']:
+            while value and measure(value + '...', scale) > p['w']:
+                value = value[:-1]
+            value += '...'
+            width = measure(value, scale)
     x = p['x'] - (width / 2 if p['a'] == 1 else width if p['a'] == 2 else 0)
+    height = 9 if font == 3 else FONTS[font].line * scale * .75
+    # Background under the text before it is drawn, for the contrast audit.
+    left, top = min(479, max(0, round(x))), min(269, max(0, round(y)))
+    box = canvas.crop((left, top, max(left + 1, min(480, round(x + width))), max(top + 1, min(270, round(y + height))))).convert('RGB')
+    raw = box.tobytes()
+    pixels = sorted(luminance((raw[i] << 16) | (raw[i + 1] << 8) | raw[i + 2]) for i in range(0, len(raw), 3))
+    DRAWN.append((x, y, width, height, p['color'], p['alpha'], value, pixels[len(pixels) // 2], LAYER[0]))
     if font == 3:
         cx = x
         for c in value:
@@ -155,7 +180,7 @@ def text(canvas, p):
             paste(canvas, pixels, cx + data['xoffset'], p['y'] + data['yoffset'])
             cx += data['advance']
     else:
-        FONTS[font].draw(canvas, value, x, p['y'], p['color'], scale, p['alpha'])
+        FONTS[font].draw(canvas, value, x, y, p['color'], scale, p['alpha'])
 
 
 ITEMS = {}
@@ -178,22 +203,36 @@ def icon(canvas, p):
         EID.icon(canvas, definition, p['x'], p['y'])
 
 
+# EID colours as menu ink (features/menu_ui/ink.hpp).
+INK = {'ColorBlue': 0x1f3f9a, 'ColorOrange': 0x9a4a00, 'ColorRed': 0xa31d14, 'ColorSilver': 0x55504c, 'ColorYellow': 0x6e5200,
+       'ColorEIDObjName': 0x7d2a7d, 'ColorObjName': 0x7d2a7d, 'ColorGray': 0x5e5753, 'ColorLime': 0x2b6b1f,
+       'ColorCyan': 0x0f6670, 'ColorEIDTransform': 0x4a3fa0, 'ColorGold': 0x7d5000, 'ColorShinyPurple': 0x6a3a9a,
+       'ColorIsaac': 0x7a4a48, 'BlinkBirthright': 0x7a4a48, 'BlinkYellowGreen': 0x4a6410}
+
+
 def description(canvas, p):
     import re
-    raw = re.sub(r'\{\{[^}]*\}\}', '', p['text'])
-    lines = []
-    for paragraph in raw.split('#'):
-        words, line = paragraph.split(), ''
-        for word in words:
-            candidate = (line + ' ' + word).strip()
-            if small_width(candidate) > p['w'] and line:
-                lines.append(line); line = word
-            else:
-                line = candidate
+    lines = []  # each line: list of (word, colour)
+    for paragraph in p['text'].split('#'):
+        colour, line, used = 0x2a1f1d, [], 0
+        for token in re.findall(r'\{\{[^}]*\}\}|[^\s{]+', paragraph):
+            if token.startswith('{{'):
+                name = token[2:-2]
+                colour = 0x2a1f1d if name in ('CR', 'ColorReset', 'Reset', 'ColorText', 'ColorEIDText', 'ColorWhite') else INK.get(name, colour)
+                continue
+            width = small_width(token + ' ')
+            if used + width > p['w'] and line:
+                lines.append(line); line, used = [], 0
+            line.append((token, colour)); used += width
         if line:
             lines.append(line)
-    for i, line in enumerate(lines[:max(1, int(p['h'] // 10))]):
-        text(canvas, {'text': line, 'f': 3, 'scale': 1, 'w': 0, 'a': 0, 'x': p['x'], 'y': p['y'] + 10 * i, 'color': 0x2a1f1d, 'alpha': 1})
+    rows = max(1, int(p['h'] // 11))
+    page = max(0, p.get('frame', -1))
+    for i, line in enumerate(lines[page * rows:page * rows + rows]):
+        x = p['x']
+        for word, colour in line:
+            text(canvas, {'text': word, 'f': 3, 'scale': 1, 'w': 0, 'a': 0, 'x': x, 'y': p['y'] + 11 * i, 'color': colour, 'alpha': 1})
+            x += small_width(word + ' ')
 
 
 def render(scene) -> Image.Image:
@@ -205,6 +244,8 @@ def render(scene) -> Image.Image:
     for p in scene['paint']:
         kind = p['k']
         if kind == 0:
+            if p['w'] >= 1000:
+                LAYER[0] += 1
             layer = Image.new('RGBA', canvas.size)
             c = p['color']
             box = (round(p['x']), round(p['y']), round(p['x'] + p['w']), round(p['y'] + p['h']))
@@ -232,15 +273,60 @@ def render(scene) -> Image.Image:
     return canvas
 
 
+def audit(name):
+    """Readability problems in one rendered scene: text past the screen, text
+    over other text, and dark text on a dark background (or light on light)."""
+    issues = []
+    if name.startswith(('open-', 'closing-', 'mods-turning')):
+        return issues  # mid-animation: papers are still sliding in or out
+    top = max((d[8] for d in DRAWN), default=0)
+    visible = [d for d in DRAWN if d[5] >= .5 and d[6].strip() and (d[8] == top or d[1] > 240)]
+    for x, y, w, h, colour, alpha, value, background, _ in visible:
+        if x < -0.5 or x + w > 480.5 or y < -0.5 or y + h > 270.5:
+            issues.append(f'{name}: "{value}" runs off the screen')
+        fg = luminance(colour)
+        ratio = (max(fg, background) + .05) / (min(fg, background) + .05)
+        if alpha >= .9 and colour != 0x9a8c84 and ratio < 4.5:
+            issues.append(f'{name}: "{value}" has {ratio:.1f}:1 contrast against what is behind it')
+    for i, a in enumerate(visible):
+        for b in visible[i + 1:]:
+            if abs(a[0] - b[0]) < 1.5 and abs(a[1] - b[1]) < 1.5:
+                continue  # a shadow or stamp drawn twice on purpose
+            overlap_x = min(a[0] + a[2], b[0] + b[2]) - max(a[0], b[0])
+            overlap_y = min(a[1] + a[3], b[1] + b[3]) - max(a[1], b[1])
+            if overlap_x > 1 and overlap_y > 2:
+                issues.append(f'{name}: "{a[6]}" overlaps "{b[6]}"')
+    return issues
+
+
+def export_metrics(path):
+    """Glyph advances for preview_dump.cpp, so its layout measures like the game."""
+    lines = []
+    for font in (0, 1, 2):
+        lines += [f'{font} {code} {FONTS[font].chars[code][6]}' for code in range(32, 127) if code in FONTS[font].chars]
+    lines += [f'3 {code} {EID.GLYPHS[code]["advance"]}' for code in range(32, 127) if code in EID.GLYPHS]
+    Path(path).write_text('\n'.join(lines) + '\n')
+    print(f'Wrote {len(lines)} glyph advances to {path}')
+
+
 def main():
+    if len(sys.argv) > 2 and sys.argv[1] == '--metrics':
+        export_metrics(sys.argv[2])
+        return
     source = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / 'evidence/menu/preview/paints.json'
     out = source.parent
     scenes = json.loads(source.read_text())
-    images = []
+    images, issues = [], []
     for scene in scenes:
-        frame = render(scene).resize((960, 540), Image.NEAREST)
+        DRAWN.clear()
+        LAYER[0] = 0
+        frame = render(scene)
+        issues += audit(scene['name'])
+        frame = frame.resize((960, 540), Image.NEAREST)
         frame.save(out / f"{scene['name']}.png")
         images.append((scene['name'], frame))
+    (out / 'audit.json').write_text(json.dumps(issues, indent=2) + '\n')
+    print('\n'.join(issues) if issues else 'Readability audit: no text off screen, overlapping or below 4.5:1')
     columns = 3
     rows = (len(images) + columns - 1) // columns
     sheet = Image.new('RGBA', (columns * 480, rows * 270), (0, 0, 0, 255))

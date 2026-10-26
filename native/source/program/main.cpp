@@ -13,6 +13,7 @@
 #include "clean_map.hpp"
 #include "boss_hud_gate.hpp"
 #include "hit_counter.hpp"
+#include "rplus.hpp"
 #include "generated/build_profile.hpp"
 #include "generated/features.hpp"
 #include <cstring>
@@ -95,6 +96,10 @@ HOOK_DEFINE_TRAMPOLINE(LoadGameModule) {
                 isaac::SetModAvailable(isaac::ModFeature::HitCounter,readyHits);
                 if (!readyHits)
                     Logging.Log("Isaac mods: Hit Counter failed its guards; disabled.\n");
+                const bool readyRplus=isaac::InitializeRepentancePlus(s_Repentance);
+                isaac::SetModAvailable(isaac::ModFeature::RepentancePlus,readyRplus);
+                if (!readyRplus)
+                    Logging.Log("Isaac mods: Repentance+ Rules failed their guards; vanilla rules are unchanged.\n");
                 const bool readyGreed=isaac::InitializeGreedMachine(s_Repentance);
                 isaac::SetModAvailable(isaac::ModFeature::GreedNoJam,readyGreed);
                 if (!readyGreed)
@@ -129,6 +134,7 @@ HOOK_DEFINE_TRAMPOLINE(UnloadGameModule) {
                 isaac::ResetSpecialist();
                 isaac::ResetHitCounter();
                 isaac::ResetGreedMachine();
+                isaac::ResetRepentancePlus();
             }
         }
         const auto result = Orig(mod);

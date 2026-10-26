@@ -11,8 +11,10 @@ namespace isaac::menu_ui {
 enum class PaintKind : std::uint8_t { Rect, Art, Text, Item, Icon, Description, HitCounter };
 enum class Font : std::uint8_t { Ink, InkLarge, Hud, Small };
 enum class Align : std::uint8_t { Left, Center, Right };
-inline constexpr std::uint32_t Ink = 0x2a1f1d, InkFaint = 0x8a7c74, InkStrong = 0x140d0c, Paper = 0xf4ede1,
-    InkGood = 0x2f5e28, InkBad = 0x7a2a22;
+// InkFaint is secondary text and still reads at 4.5:1 on paper; InkDisabled is
+// only for things that cannot be used right now.
+inline constexpr std::uint32_t Ink = 0x2a1f1d, InkFaint = 0x6b5d55, InkDisabled = 0x9a8c84, InkStrong = 0x140d0c,
+    Paper = 0xf4ede1, InkGood = 0x2f5e28, InkBad = 0x7a2a22;
 
 struct Paint {
     PaintKind kind{};
@@ -49,13 +51,15 @@ public:
             p->alpha = alpha; p->align = align; p->w = maxWidth;
         }
     }
-    void Format(Font font, float x, float y, std::uint32_t color, float scale, float alpha, Align align, const char* format, ...) {
+    // Like Text: maxWidth > 0 shortens the result to fit.
+    void Format(Font font, float x, float y, std::uint32_t color, float scale, float alpha, Align align, float maxWidth,
+                const char* format, ...) {
         char buffer[160];
         va_list args;
         va_start(args, format);
         std::vsnprintf(buffer, sizeof(buffer), format, args);
         va_end(args);
-        Text(font, buffer, x, y, color, scale, alpha, align);
+        Text(font, buffer, x, y, color, scale, alpha, align, maxWidth);
     }
     void Item(std::uint32_t id, bool trinket, float x, float y, float scale = 1, float alpha = 1) {
         if (auto* p = Add(PaintKind::Item)) { p->id = id; p->flag = trinket; p->x = x; p->y = y; p->scale = scale; p->alpha = alpha; }
@@ -63,8 +67,11 @@ public:
     void Icon(const char* token, float x, float y, float alpha = 1) {
         if (auto* p = Add(PaintKind::Icon)) { p->name = Copy(token); p->x = x; p->y = y; p->alpha = alpha; }
     }
-    void Description(std::uint32_t item, const char* title, const char* markup, float x, float y, float w, float h) {
-        if (auto* p = Add(PaintKind::Description)) { p->id = item; p->name = Copy(title); p->text = markup; p->x = x; p->y = y; p->w = w; p->h = h; }
+    // page >= 0 shows that page of a long text; -1 lets the backend turn pages.
+    void Description(std::uint32_t item, const char* title, const char* markup, float x, float y, float w, float h, int page = -1) {
+        if (auto* p = Add(PaintKind::Description)) {
+            p->id = item; p->name = Copy(title); p->text = markup; p->x = x; p->y = y; p->w = w; p->h = h; p->frame = page;
+        }
     }
     void HitCounter(float alpha, bool outline) {
         if (auto* p = Add(PaintKind::HitCounter)) { p->alpha = alpha; p->flag = outline; }

@@ -8,7 +8,8 @@ std::uint32_t s_Available = (1u << ModCount) - 1;
 constexpr const char* Names[] = {
     "External Item Descriptions", "Hit Counter", "Enhanced Boss Bars", "Planetarium Chance",
     "Regret Pedestals", "Time Machine", "Machine Lock", "Greed Machine Never Jams",
-    "Instant Fires and Poops", "Specialist Dance", "Animated Items", "Unique Birthright", "Clean Minimap"
+    "Instant Fires and Poops", "Specialist Dance", "Animated Items", "Unique Birthright", "Clean Minimap",
+    "Repentance+ Rules"
 };
 constexpr const char* Descriptions[] = {
     "Descriptions for nearby items and rooms. Hold map to browse your character and inventory.",
@@ -23,7 +24,8 @@ constexpr const char* Descriptions[] = {
     "Dance and play the Specialist music beside a high-quality item. Turning this off ends the dance.",
     "Animate supported collectible pictures on pedestals and when held above your head.",
     "Give Birthright a different picture for each character.",
-    "Remove the dark frame around the small map. Map rooms and icons stay visible."
+    "Remove the dark frame around the small map. Map rooms and icons stay visible.",
+    "Repentance+ rules. With The Void unlocked, a Void portal always appears after ???, The Lamb, Mega Satan and Mother (once you have seen her ending). Counts Boss Rush waves."
 };
 static_assert(sizeof(Names)/sizeof(*Names)==ModCount && sizeof(Descriptions)/sizeof(*Descriptions)==ModCount);
 constexpr unsigned Index(ModFeature feature) { return static_cast<unsigned>(feature); }
@@ -44,7 +46,8 @@ void ToggleMod(ModFeature feature) {
 const char* ModName(ModFeature feature) { return Index(feature) < ModCount ? Names[Index(feature)] : ""; }
 const char* ModDescription(ModFeature feature) { return Index(feature) < ModCount ? Descriptions[Index(feature)] : ""; }
 bool ModHasSettings(ModFeature feature) {
-    return feature == ModFeature::HitCounter || feature == ModFeature::TimeMachine || feature == ModFeature::Eid;
+    return feature == ModFeature::HitCounter || feature == ModFeature::TimeMachine || feature == ModFeature::Eid ||
+        feature == ModFeature::RepentancePlus;
 }
 std::uint32_t ModEnabledMask() { return s_Enabled & ((1u << ModCount) - 1); }
 void SetModEnabledMask(std::uint32_t mask) {

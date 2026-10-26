@@ -67,6 +67,7 @@ struct Host {
     unsigned spriteLoads{}, spriteRenders{};
     // Layout pushed to the features.
     int hitX{-2}, hitY{-2}; unsigned hitSize{}, hitOpacity{}, tmSteps{}; bool hitFloor{}, eidNearby{}, eidMap{};
+    std::uint8_t rplusRules{0xff};
 
     Host() {
         namespace p = isaac::profile;

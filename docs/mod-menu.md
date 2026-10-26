@@ -1,4 +1,4 @@
-# Mod menu (iteration 7)
+# Mod menu (iterations 7 and 8)
 
 A paper menu in the style of the game's own Mods, Options, Stats and
 Collection pages. It replaces the old dark item-test menu and the old Mods
@@ -18,20 +18,28 @@ Only the controller that opened the menu can use it.
 ## Pages
 
 - **Items**: every collectible, trinket, card/rune, pill and pickup, with the
-  game's own pictures. **X** opens the filter card (type, item kind, quality,
-  item pool, everything / favourites / recent / owned / not owned, sort).
-  **Y** marks a favourite. **A** opens the action note:
+  game's own pictures. **X** opens the filter card (search, type, item kind,
+  quality, item pool, everything / favourites / recent / owned / not owned,
+  sort). **Y** marks a favourite.
+  - **RS** opens the search board: pick letters with the D-pad and **A**.
+    - Capitals and punctuation don't matter, and numbers match item IDs.
+    - **B** deletes, **Y** clears, **RS** or Done closes.
+    - The search works with the other filters and lasts until the menu closes.
+  - **LS** turns the page of a long description (it also turns by itself; `2/3` shows in the margin).
+  - **A** opens the action note:
   - *Place on a pedestal* / *Drop on the floor* (next to Isaac);
   - *Give to Isaac* (not for pickups; the Broken Shovel and Knife pieces,
     Dogma and Dad's Note can only be placed);
   - *Place as a shop item* (collectibles; the room sets the price).
   The selected item's EID description is shown underneath.
-- **Mods**: all 13 mods with a stamp showing on or off. **A** switches a mod,
+- **Mods**: all 14 mods with a stamp showing on or off. **A** switches a mod,
   **Y** opens its settings where it has any:
   - *Hit Counter*: show, move (D-pad, hold to go faster), size, opacity,
     floor hits, reset;
   - *Time Machine*: top speed (2x to 6x);
-  - *External Item Descriptions*: nearby descriptions, hold Map to browse.
+  - *External Item Descriptions*: nearby descriptions, hold Map to browse;
+  - *Repentance+ Rules*: Void portal after ??? and The Lamb, after Mega Satan,
+    after Mother, and the Boss Rush wave counter (see `docs/rplus-port.md`).
 - **Run**: seed, floor, character, time, hits, stats, item history and
   transformation progress.
 - **Tools**: full health, +1 soul heart, +10 coins, +5 bombs, +5 keys, charge
@@ -43,7 +51,8 @@ Only the controller that opened the menu can use it.
 
 Everything above, including which mods are on, favourites and recent items,
 is saved in a small text file, `isaac_mods_menu.cfg`, inside Isaac's own save
-data (the same storage as your game progress). It is written when the menu
+data (the same storage as your game progress). Iteration 8 writes version 2
+of the file, which adds the Repentance+ rule switches. It is written when the menu
 closes and only if something changed. A missing or damaged file just means
 the defaults. Deleting Isaac's save data resets it too.
 

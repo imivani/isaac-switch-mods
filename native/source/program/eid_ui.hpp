@@ -23,7 +23,10 @@ void DrawEidMenuDescription(const FeatureFrame& frame, unsigned item,
 // Mod menu on paper: dark ink text, body-only descriptions and named icons.
 void SetEidInk(bool ink);
 float EidMenuTextWidth(const char* text);
+// page >= 0 shows that page of the text; -1 turns pages every 5 seconds.
 void DrawEidMenuBody(const FeatureFrame& frame, const char* markup, float x, float y,
-                     float width, float height, std::uint64_t milliseconds);
+                     float width, float height, std::uint64_t milliseconds, int page = -1);
+// Lines the text takes at this width, from the same layout DrawEidMenuBody uses.
+unsigned EidMenuBodyLines(const char* markup, float width, std::uint64_t milliseconds);
 void DrawEidIcon(const FeatureFrame& frame, const char* token, float x, float y);
 }

@@ -4,6 +4,7 @@
 #include "timemachine.hpp"
 #include "eid_features.hpp"
 #include "eid_ui.hpp"
+#include "rplus.hpp"
 #include "native_sprite.hpp"
 #include "generated/build_profile.hpp"
 #include "generated/menu_guards.hpp"
@@ -101,6 +102,7 @@ void ApplyPrefs() {
     SetHitCounterLayout(s_Prefs.hitX, s_Prefs.hitY, s_Prefs.hitSize, s_Prefs.hitOpacity, s_Prefs.hitFloor);
     SetTimeMachineMaxSteps(s_Prefs.timeMachineSteps);
     SetEidOptions(s_Prefs.eidNearby, s_Prefs.eidMap);
+    SetRepentancePlusRules(s_Prefs.rplus);
 }
 bool Mounted() {
     auto mounted = Fs<bool (*)(const char*)>(mn::FsIsMountedStub);
@@ -188,20 +190,25 @@ void DrawText(const FeatureFrame& frame, const mu::Paint& p) {
     }
     const void* font = FontFor(p.font);
     if (!font) return;
-    float width = NativeWidth(font, text, p.scale);
+    float scale = p.scale;
+    float width = NativeWidth(font, text, scale);
     if (p.w > 0 && width > p.w) {
-        // Shorten with an ellipsis to fit the column.
+        // Slightly narrower text reads better than a cut name: shrink up to 15%,
+        // then shorten with an ellipsis to fit the column.
+        const float fitted = scale * p.w / width;
+        scale = fitted >= p.scale * .85f ? fitted : p.scale * .85f;
+        width = NativeWidth(font, text, scale);
         std::size_t length = std::strlen(text);
-        while (length > 0) {
+        while (width > p.w && length > 0) {
             text[--length] = 0;
             char trial[168];
             std::snprintf(trial, sizeof(trial), "%s...", text);
-            if (NativeWidth(font, trial, p.scale) <= p.w) { std::memcpy(text, trial, length + 4); break; }
+            if (NativeWidth(font, trial, scale) <= p.w) { std::memcpy(text, trial, length + 4); break; }
         }
-        width = NativeWidth(font, text, p.scale);
+        width = NativeWidth(font, text, scale);
     }
     const float x = p.x - (p.align == mu::Align::Center ? width * .5f : p.align == mu::Align::Right ? width : 0);
-    Canvas{const_cast<void*>(font)}.Text(text, x, p.y, color, p.scale);
+    Canvas{const_cast<void*>(font)}.Text(text, x, p.y + (p.scale - scale) * 6.f, color, scale);
 }
 NativeSprite* Icon(std::uint32_t id, bool trinket) {
     if (!id || id > 0xffff) return nullptr;
@@ -259,7 +266,7 @@ void Execute(const FeatureFrame& frame) {
         case mu::PaintKind::Description:
             // EID markup colours are made for dark backgrounds: draw them as ink on paper.
             SetEidInk(true);
-            DrawEidMenuBody(frame, p.text, p.x, p.y, p.w, p.h, now);
+            DrawEidMenuBody(frame, p.text, p.x, p.y, p.w, p.h, now, p.frame);
             SetEidInk(false);
             break;
         case mu::PaintKind::HitCounter: DrawHitCounterPreview(frame, p.alpha, p.flag); break;
@@ -313,6 +320,14 @@ public:
         return found ? description.markup : nullptr;
     }
     void HitCounterSize(float& w, float& h) override { HitCounterBox(w, h); }
+    // Same measurements DrawText uses (Small text is drawn unscaled).
+    float TextWidth(mu::Font font, const char* text, float scale) override {
+        if (!text) return 0;
+        if (font == mu::Font::Small) return EidMenuTextWidth(text);
+        const void* native = FontFor(font);
+        return native ? NativeWidth(native, text, scale) : mu::Host::TextWidth(font, text, scale);
+    }
+    unsigned DescriptionLines(const char* markup, float width) override { return EidMenuBodyLines(markup, width, isaac::Now()); }
 };
 constinit NativeHost s_Host;
 

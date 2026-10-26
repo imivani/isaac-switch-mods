@@ -62,7 +62,7 @@ struct Row {
     const char* help{};
     const char* actionText{};
 };
-enum class Page : std::uint8_t { None, HitCounter, TimeMachine, Eid, Menu };
+enum class Page : std::uint8_t { None, HitCounter, TimeMachine, Eid, Menu, RepentancePlus };
 
 inline constexpr const char* CategoryNames[] = {"Collectibles", "Trinkets", "Cards & runes", "Pills", "Pickups"};
 inline constexpr const char* TypeNames[] = {"All types", "Passive", "Familiar", "Active"};
@@ -113,7 +113,48 @@ struct Visible {
     std::uint8_t quality{}, kind{};
     std::uint32_t pools{};
     const char* icon{};
+    std::uint8_t rank{};  // search: 1 = this ID, 2 = name starts with it, 3 = a word does, 4 = anywhere
 };
+
+// Item search compares letters and digits only, ignoring case, so "moms knife"
+// finds "Mom's Knife". Returns the length written to out (at most size - 1);
+// starts[i] says a word starts at out[i] (apostrophes do not split words).
+inline unsigned SearchNormalize(const char* text, char* out, unsigned size, bool* starts = nullptr) {
+    unsigned n = 0;
+    bool boundary = true;
+    for (const char* c = text ? text : ""; *c && n + 1 < size; ++c) {
+        char ch = *c;
+        if (ch >= 'A' && ch <= 'Z') ch = static_cast<char>(ch - 'A' + 'a');
+        if ((ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9')) {
+            if (starts) starts[n] = boundary;
+            out[n++] = ch;
+            boundary = false;
+        } else if (ch != '\'') boundary = true;
+    }
+    out[n] = 0;
+    return n;
+}
+// query must already be normalized. 0 = no match.
+inline std::uint8_t SearchRank(const char* name, unsigned id, bool byId, const char* query) {
+    if (!query || !*query) return 4;
+    if (byId) {
+        unsigned number = 0, digits = 0;
+        for (const char* q = query; *q >= '0' && *q <= '9' && digits < 6; ++q, ++digits) number = number * 10 + static_cast<unsigned>(*q - '0');
+        if (digits && !query[digits] && number == id) return 1;
+    }
+    char text[64];
+    bool starts[64]{};
+    const unsigned length = SearchNormalize(name, text, sizeof(text), starts);
+    const unsigned wanted = static_cast<unsigned>(std::strlen(query));
+    std::uint8_t best = 0;
+    for (unsigned i = 0; i + wanted <= length; ++i) {
+        if (std::memcmp(text + i, query, wanted) != 0) continue;
+        const std::uint8_t rank = i == 0 ? 2 : starts[i] ? 3 : 4;
+        if (!best || rank < best) best = rank;
+        if (best == 2) break;
+    }
+    return best;
+}
 
 class Menu {
 public:
@@ -131,6 +172,9 @@ public:
     const Visible* VisibleAt(unsigned i) const { return i < visibleCount_ ? &visible_[i] : nullptr; }
     Page SettingsPage() const { return page_; }
     bool FilterOpen() const { return filterOpen_; }
+    bool SearchOpen() const { return searchOpen_; }
+    const char* SearchText() const { return search_; }
+    unsigned SearchCursor() const { return searchCursor_; }
     bool PopupOpen() const { return popupOpen_; }
     const char* ToastText() const { return toast_; }
     unsigned ModSelection() const { return modSelection_; }
@@ -176,6 +220,7 @@ public:
         if (!keys) return true;
         if (keys & Bit(Plus)) { Close(host, now); return true; }
         if (popupOpen_) { UpdatePopup(host, keys, now); return true; }
+        if (searchOpen_) { UpdateSearch(host, keys, now); return true; }
         if (filterOpen_) { UpdateFilter(host, keys, now); return true; }
         if (page_ != Page::None && tab_ == Tab::Mods) { UpdateRows(host, keys, now, true); return true; }
         if (keys & (Bit(L) | Bit(R))) { SwitchTab(host, keys & Bit(R) ? 1 : -1, now); return true; }
@@ -199,7 +244,7 @@ public:
         lastPaint_ = now;
         const float ox = (width - 480.f) * .5f, oy = (height - 270.f) * .5f;
         screenW_ = width; screenH_ = height;
-        if (moving_) { PaintMove(out, width, height, now); return; }
+        if (moving_) { PaintMove(host, out, width, height, now); return; }
         const float appear = closing_ ? 1 - anim::EaseInCubic(anim::Progress(now, closedAt_, CloseDuration()))
                                       : anim::EaseOutCubic(anim::Progress(now, openedAt_, Duration(OpenMs)));
         const auto& prefs = host.Preferences();
@@ -212,7 +257,7 @@ public:
         const float switchT = anim::EaseOutCubic(anim::Progress(now, tabChangedAt_, Duration(TabMs)));
         const float slide = (1 - switchT) * 34.f * tabDirection_;
         Frame frame{out, host, now, elapsed, ox + slide, oy, rise(0), rise(70), switchT * appear, appear};
-        PaintTabs(out, ox, oy, appear, now);
+        PaintTabs(host, out, ox, oy, appear, now);
         switch (tab_) {
         case Tab::Items: PaintItems(frame); break;
         case Tab::Mods: PaintMods(frame); break;
@@ -221,8 +266,8 @@ public:
         case Tab::Settings: PaintSettings(frame); break;
         default: break;
         }
-        PaintPrompts(out, width, height, appear);
-        PaintToast(out, width, height, now);
+        PaintPrompts(host, out, width, height, appear);
+        PaintToast(host, out, width, height, now);
     }
 
 private:
@@ -239,13 +284,15 @@ private:
         input_.Reset(); moveInput_.Reset();
         origin_ = Origin::Shortcut; tab_ = Tab::Mods; page_ = Page::None; category_ = Category::Collectible;
         type_ = show_ = sort_ = 0; quality_ = pool_ = -1;
-        open_ = closing_ = filterOpen_ = popupOpen_ = moving_ = false;
+        open_ = closing_ = filterOpen_ = popupOpen_ = moving_ = searchOpen_ = false;
+        search_[0] = searchKey_[0] = 0; searchCursor_ = 0;
         selection_ = modSelection_ = rowSelection_ = toolSelection_ = filterRow_ = popupRow_ = historyPage_ = 0;
         visibleCount_ = 0;
         openedAt_ = closedAt_ = tabChangedAt_ = selectedAt_ = stampAt_ = popupAt_ = pageAt_ = toastAt_ = lastPaint_ = 0;
         moveSince_ = moveLast_ = 0; moveHeld_ = 0;
         tabDirection_ = 1; cursorY_ = rowCursor_ = toolCursor_ = gridX_ = gridY_ = 0;
         toast_[0] = 0;
+        descEntry_ = {}; descPage_ = descPages_ = 0; descManual_ = false; descShownAt_ = 0;
     }
     unsigned Duration(unsigned ms) const { return reduceMotion_ ? 0 : ms; }
     unsigned CloseDuration() const { return Duration(CloseMs); }
@@ -264,7 +311,7 @@ private:
         tab_ = static_cast<Tab>(next);
         tabDirection_ = direction > 0 ? 1.f : -1.f;
         tabChangedAt_ = now;
-        page_ = Page::None; rowSelection_ = 0; filterOpen_ = popupOpen_ = false;
+        page_ = Page::None; rowSelection_ = 0; filterOpen_ = popupOpen_ = searchOpen_ = false;
         Sound(host, sound::PageTurn, .8f);
     }
     float Bob(std::uint64_t now) const { return reduceMotion_ ? 0 : anim::Wave(now, 900) * 1.5f; }
@@ -281,19 +328,24 @@ private:
     // ---------- items ----------
     bool GridView() const { return category_ == Category::Collectible || category_ == Category::Trinket; }
     unsigned PerPage() const { return GridView() ? GridColumns * GridRows : ListColumns * ListRows; }
+    // Filter card rows: 0 Search, 1 Show, 2 Type, 3 Quality, 4 Pool, 5 Only, 6 Sort.
+    static constexpr unsigned FilterRows = 7;
     bool FilterRowActive(unsigned row) const {
-        if (row == 1 || row == 2 || row == 3) return category_ == Category::Collectible;
-        if (row == 4) return true;
+        if (row == 2 || row == 3 || row == 4) return category_ == Category::Collectible;
         return true;
     }
     void Refilter(Host& host) {
         const auto& prefs = host.Preferences();
         visibleCount_ = 0;
+        const bool searching = searchKey_[0] != 0;
         auto add = [&](const Visible& v) {
             if (show_ == 1 && !prefs.IsFavorite(v.entry)) return;
             if (show_ == 3 && (category_ != Category::Collectible || !host.Owned(v.entry.id))) return;
             if (show_ == 4 && category_ == Category::Collectible && host.Owned(v.entry.id)) return;
-            if (visibleCount_ < MaxVisible) visible_[visibleCount_++] = v;
+            // IDs are only meaningful for these; pickups are variant/subtype pairs.
+            const auto rank = searching ? SearchRank(v.name, v.entry.id, category_ != Category::Pickup, searchKey_) : 0;
+            if (searching && !rank) return;
+            if (visibleCount_ < MaxVisible) { visible_[visibleCount_] = v; visible_[visibleCount_++].rank = rank; }
         };
         auto build = [&](const Entry& e) -> Visible {
             Visible v{e};
@@ -354,6 +406,15 @@ private:
                 visible_[j] = v;
             }
         }
+        if (searching) {
+            // Best matches first; the chosen sort order stays within each group.
+            for (unsigned i = 1; i < visibleCount_; ++i) {
+                const auto v = visible_[i];
+                unsigned j = i;
+                while (j > 0 && v.rank < visible_[j - 1].rank) { visible_[j] = visible_[j - 1]; --j; }
+                visible_[j] = v;
+            }
+        }
         if (selection_ >= visibleCount_) selection_ = visibleCount_ ? visibleCount_ - 1 : 0;
     }
     void MoveItems(Host& host, int delta, std::uint64_t now) {
@@ -372,7 +433,12 @@ private:
         else if (keys & Bit(Down)) MoveItems(host, down, now);
         else if (keys & Bit(ZL)) MoveItems(host, -static_cast<int>(PerPage()), now);
         else if (keys & Bit(ZR)) MoveItems(host, static_cast<int>(PerPage()), now);
-        else if (keys & Bit(X)) { filterOpen_ = true; filterRow_ = 0; Sound(host, sound::PaperIn, .45f); }
+        else if (keys & Bit(X)) { filterOpen_ = true; filterRow_ = 1; Sound(host, sound::PaperIn, .45f); }
+        else if (keys & Bit(RS)) OpenSearch(host);
+        else if ((keys & Bit(LS)) && descPages_ > 1) {
+            descPage_ = (descPage_ + 1) % descPages_; descManual_ = true;
+            Sound(host, sound::PageTurn, .4f);
+        }
         else if ((keys & Bit(Y)) && visibleCount_) {
             auto& prefs = host.Preferences();
             const bool now_favorite = prefs.ToggleFavorite(visible_[selection_].entry);
@@ -427,23 +493,29 @@ private:
         }
     }
     void UpdateFilter(Host& host, std::uint32_t keys, std::uint64_t now) {
-        constexpr unsigned rows = 6;
+        constexpr unsigned rows = FilterRows;
         if (keys & (Bit(B) | Bit(X))) { filterOpen_ = false; Sound(host, sound::PaperOut, .45f); return; }
         if (keys & Bit(Up)) { Select(filterRow_, (filterRow_ + rows - 1) % rows, host, now); return; }
         if (keys & Bit(Down)) { Select(filterRow_, (filterRow_ + 1) % rows, host, now); return; }
+        if (filterRow_ == 0) {
+            // Search: A or Right types, Left or Y clears.
+            if (keys & (Bit(A) | Bit(Right) | Bit(RS))) OpenSearch(host);
+            else if ((keys & (Bit(Left) | Bit(Y))) && search_[0]) { SetSearch(host, ""); Sound(host, sound::NoteHide, .5f); }
+            return;
+        }
         int delta = (keys & Bit(Right)) || (keys & Bit(A)) ? 1 : (keys & Bit(Left)) ? -1 : 0;
         if (!delta || !FilterRowActive(filterRow_)) return;
         auto cycle = [&](int value, int lo, int hi) { value += delta; return value > hi ? lo : value < lo ? hi : value; };
         switch (filterRow_) {
-        case 0:
+        case 1:
             category_ = static_cast<Category>(cycle(static_cast<int>(category_), 0, static_cast<int>(CategoryCount) - 1));
             if (category_ != Category::Collectible && show_ >= 3) show_ = 0;
             break;
-        case 1: type_ = static_cast<std::uint8_t>(cycle(type_, 0, 3)); break;
-        case 2: quality_ = static_cast<std::int8_t>(cycle(quality_, -1, 4)); break;
-        case 3: pool_ = static_cast<std::int8_t>(cycle(pool_, -1, static_cast<int>(cat::PoolCount) - 1)); break;
-        case 4: show_ = static_cast<std::uint8_t>(cycle(show_, 0, category_ == Category::Collectible ? 4 : 2)); break;
-        case 5: sort_ = static_cast<std::uint8_t>(cycle(sort_, 0, 2)); break;
+        case 2: type_ = static_cast<std::uint8_t>(cycle(type_, 0, 3)); break;
+        case 3: quality_ = static_cast<std::int8_t>(cycle(quality_, -1, 4)); break;
+        case 4: pool_ = static_cast<std::int8_t>(cycle(pool_, -1, static_cast<int>(cat::PoolCount) - 1)); break;
+        case 5: show_ = static_cast<std::uint8_t>(cycle(show_, 0, category_ == Category::Collectible ? 4 : 2)); break;
+        case 6: sort_ = static_cast<std::uint8_t>(cycle(sort_, 0, 2)); break;
         default: break;
         }
         selection_ = 0;
@@ -451,11 +523,72 @@ private:
         Sound(host, sound::Scroll, .5f);
     }
 
+    // ---------- search ----------
+    // The letter board: 36 keys in 9 columns, then Space, Delete and Done.
+    static constexpr char SearchKeys[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    static constexpr unsigned SearchColumns = 9, SearchLetters = 36, SearchLetterRows = SearchLetters / SearchColumns;
+    static constexpr unsigned KeySpace = 36, KeyDelete = 37, KeyDone = 38, SearchMax = 20;
+    void OpenSearch(Host& host) {
+        searchOpen_ = true;
+        Sound(host, sound::PaperIn, .45f);
+    }
+    void SetSearch(Host& host, const char* text) {
+        std::snprintf(search_, sizeof(search_), "%s", text);
+        SearchNormalize(search_, searchKey_, sizeof(searchKey_));
+        selection_ = 0;
+        Refilter(host);
+    }
+    void SearchMove(unsigned& key, std::uint32_t keys) {
+        const unsigned wideRow = SearchLetterRows;
+        unsigned row = key < SearchLetters ? key / SearchColumns : wideRow;
+        unsigned column = key < SearchLetters ? key % SearchColumns : (key - KeySpace) * 3 + 1;
+        if (keys & Bit(Left)) {
+            if (row == wideRow) key = KeySpace + (key - KeySpace + 2) % 3;
+            else key = row * SearchColumns + (column + SearchColumns - 1) % SearchColumns;
+        } else if (keys & Bit(Right)) {
+            if (row == wideRow) key = KeySpace + (key - KeySpace + 1) % 3;
+            else key = row * SearchColumns + (column + 1) % SearchColumns;
+        } else if (keys & (Bit(Up) | Bit(Down))) {
+            row = (keys & Bit(Up)) ? (row + wideRow) % (wideRow + 1) : (row + 1) % (wideRow + 1);
+            key = row == wideRow ? KeySpace + column / 3 : row * SearchColumns + column;
+        }
+    }
+    void UpdateSearch(Host& host, std::uint32_t keys, std::uint64_t now) {
+        const unsigned length = static_cast<unsigned>(std::strlen(search_));
+        auto done = [&] { searchOpen_ = false; Sound(host, sound::PaperOut, .45f); };
+        if (keys & Bit(RS)) { done(); return; }
+        if (keys & Bit(B)) {
+            if (!length) { done(); return; }
+            char text[sizeof(search_)];
+            std::snprintf(text, sizeof(text), "%.*s", static_cast<int>(length - 1), search_);
+            SetSearch(host, text); Sound(host, sound::NoteHide, .4f);
+            return;
+        }
+        if (keys & Bit(Y)) { if (length) { SetSearch(host, ""); Sound(host, sound::NoteHide, .5f); } return; }
+        if (keys & Directions) {
+            const unsigned before = searchCursor_;
+            SearchMove(searchCursor_, keys);
+            if (searchCursor_ != before) { selectedAt_ = now; Sound(host, sound::Scroll, .5f); }
+            return;
+        }
+        if (!(keys & Bit(A))) return;
+        if (searchCursor_ == KeyDone) { done(); return; }
+        if (searchCursor_ == KeyDelete) { UpdateSearch(host, Bit(B), now); return; }
+        // No leading or doubled spaces; they do not change the match anyway.
+        const char typed = searchCursor_ == KeySpace ? ' ' : SearchKeys[searchCursor_];
+        if (length >= SearchMax || (typed == ' ' && (!length || search_[length - 1] == ' '))) { Sound(host, sound::ErrorBuzz, .3f); return; }
+        char text[sizeof(search_)];
+        std::snprintf(text, sizeof(text), "%s%c", search_, typed);
+        SetSearch(host, text);
+        Sound(host, sound::Plop, .4f);
+    }
+
     // ---------- mods and settings rows ----------
     static Page PageFor(unsigned mod) {
         if (mod == mods::HitCounter) return Page::HitCounter;
         if (mod == mods::TimeMachine) return Page::TimeMachine;
         if (mod == mods::Eid) return Page::Eid;
+        if (mod == mods::RepentancePlus) return Page::RepentancePlus;
         return Page::None;
     }
     void UpdateMods(Host& host, std::uint32_t keys, std::uint64_t now) {
@@ -503,6 +636,12 @@ private:
             rows[n++] = {"Nearby descriptions", RowKind::Toggle, p.eidNearby ? 1 : 0, 0, 1, 1, nullptr, "Describe items, pickups and rooms near Isaac."};
             rows[n++] = {"Hold Map to browse", RowKind::Toggle, p.eidMap ? 1 : 0, 0, 1, 1, nullptr, "Hold Map to look through your character and items."};
             break;
+        case Page::RepentancePlus:
+            rows[n++] = {"??? and Lamb", RowKind::Toggle, p.rplus & 1 ? 1 : 0, 0, 1, 1, nullptr, "A Void portal always appears after ??? and The Lamb, instead of 1 time in 5."};
+            rows[n++] = {"Mega Satan", RowKind::Toggle, p.rplus & 2 ? 1 : 0, 0, 1, 1, nullptr, "Mega Satan always leaves a Void portal and a big chest; the chest still ends the run. Off: half the time the run just ends."};
+            rows[n++] = {"Mother", RowKind::Toggle, p.rplus & 4 ? 1 : 0, 0, 1, 1, nullptr, "A Void portal also appears after Mother, once you have seen her ending."};
+            rows[n++] = {"Boss Rush waves", RowKind::Toggle, p.rplus & 8 ? 1 : 0, 0, 1, 1, nullptr, "Show which Boss Rush wave you are on."};
+            break;
         case Page::Menu:
             rows[n++] = {"Sounds", RowKind::Toggle, p.sounds ? 1 : 0, 0, 1, 1, nullptr, "Page, cursor and button sounds in this menu."};
             rows[n++] = {"Motion", RowKind::Choice, p.reduceMotion ? 1 : 0, 0, 1, 1, motion, "Reduced turns off sliding, bobbing and popping."};
@@ -549,6 +688,9 @@ private:
             break;
         case Page::TimeMachine: p.timeMachineSteps = static_cast<std::uint8_t>(value + 1); break;
         case Page::Eid: if (row == 0) p.eidNearby = value != 0; else p.eidMap = value != 0; break;
+        case Page::RepentancePlus:
+            if (row < 4) p.rplus = static_cast<std::uint8_t>(value ? p.rplus | (1u << row) : p.rplus & ~(1u << row));
+            break;
         case Page::Menu:
             if (row == 0) p.sounds = value != 0;
             else if (row == 1) p.reduceMotion = value != 0;
@@ -638,8 +780,9 @@ private:
     static void Cursor(PaintList& out, float x, float y, float alpha, float bob) {
         out.Art(art::ModsCursor.name, 0, x + bob, y, 1, alpha);
     }
-    void PaintTabs(PaintList& out, float ox, float oy, float alpha, std::uint64_t now) {
-        float widths[TabCount] = {44, 40, 30, 44, 38};
+    void PaintTabs(Host& host, PaintList& out, float ox, float oy, float alpha, std::uint64_t now) {
+        float widths[TabCount];
+        for (unsigned i = 0; i < TabCount; ++i) widths[i] = host.TextWidth(Font::Ink, TabNames[i], .62f);
         float total = 0;
         for (float w : widths) total += w + 16;
         float x = ox + 240 - total * .5f + 8;
@@ -654,64 +797,120 @@ private:
         }
         out.Art(art::Button.name, static_cast<int>(art::Glyph::R), x - 6, oy + 2, 1, alpha);
     }
-    void PaintPrompts(PaintList& out, float width, float height, float alpha) {
-        struct P { art::Glyph glyph; const char* label; };
-        P prompts[6];
+    // Button prompts along the bottom right, laid out by their real width. If
+    // they do not all fit, the least important ones are left out.
+    void PaintPrompts(Host& host, PaintList& out, float width, float height, float alpha) {
+        struct P { art::Glyph glyph; const char* label; unsigned priority; };  // 0 = always shown
+        P prompts[8];
         unsigned n = 0;
         if (moving_) return;
-        if (popupOpen_) { prompts[n++] = {art::Glyph::A, "Choose"}; prompts[n++] = {art::Glyph::B, "Cancel"}; }
-        else if (filterOpen_) { prompts[n++] = {art::Glyph::DLeft, "Change"}; prompts[n++] = {art::Glyph::B, "Done"}; }
+        if (popupOpen_) { prompts[n++] = {art::Glyph::A, "Choose", 0}; prompts[n++] = {art::Glyph::B, "Cancel", 0}; }
+        else if (searchOpen_) {
+            prompts[n++] = {art::Glyph::A, "Type", 0}; prompts[n++] = {art::Glyph::B, "Delete", 1};
+            prompts[n++] = {art::Glyph::Y, "Clear", 2}; prompts[n++] = {art::Glyph::RStick, "Done", 0};
+        }
+        else if (filterOpen_) { prompts[n++] = {art::Glyph::DLeft, "Change", 0}; prompts[n++] = {art::Glyph::B, "Done", 0}; }
         else if (tab_ == Tab::Items) {
-            prompts[n++] = {art::Glyph::A, "Use"}; prompts[n++] = {art::Glyph::Y, "Favorite"};
-            prompts[n++] = {art::Glyph::X, "Filter"}; prompts[n++] = {art::Glyph::ZR, "Page"}; prompts[n++] = {art::Glyph::B, "Close"};
+            prompts[n++] = {art::Glyph::A, "Use", 0}; prompts[n++] = {art::Glyph::Y, "Favorite", 2};
+            prompts[n++] = {art::Glyph::X, "Filter", 1}; prompts[n++] = {art::Glyph::RStick, "Search", 1};
+            if (descPages_ > 1) prompts[n++] = {art::Glyph::LStick, "More text", 3};
+            prompts[n++] = {art::Glyph::ZR, "Page", 4}; prompts[n++] = {art::Glyph::B, "Close", 0};
         } else if (tab_ == Tab::Mods && page_ != Page::None) {
-            prompts[n++] = {art::Glyph::DLeft, "Change"}; prompts[n++] = {art::Glyph::A, "Select"}; prompts[n++] = {art::Glyph::B, "Back"};
+            prompts[n++] = {art::Glyph::DLeft, "Change", 0}; prompts[n++] = {art::Glyph::A, "Select", 0}; prompts[n++] = {art::Glyph::B, "Back", 0};
         } else if (tab_ == Tab::Mods) {
-            prompts[n++] = {art::Glyph::A, "On/Off"}; prompts[n++] = {art::Glyph::Y, "Settings"}; prompts[n++] = {art::Glyph::B, "Close"};
-        } else if (tab_ == Tab::Run) { prompts[n++] = {art::Glyph::DDown, "More items"}; prompts[n++] = {art::Glyph::B, "Close"}; }
-        else if (tab_ == Tab::Tools) { prompts[n++] = {art::Glyph::A, "Use"}; prompts[n++] = {art::Glyph::B, "Close"}; }
-        else { prompts[n++] = {art::Glyph::DLeft, "Change"}; prompts[n++] = {art::Glyph::A, "Select"}; prompts[n++] = {art::Glyph::B, "Close"}; }
+            prompts[n++] = {art::Glyph::A, "On/Off", 0}; prompts[n++] = {art::Glyph::Y, "Settings", 1}; prompts[n++] = {art::Glyph::B, "Close", 0};
+        } else if (tab_ == Tab::Run) { prompts[n++] = {art::Glyph::DDown, "More items", 1}; prompts[n++] = {art::Glyph::B, "Close", 0}; }
+        else if (tab_ == Tab::Tools) { prompts[n++] = {art::Glyph::A, "Use", 0}; prompts[n++] = {art::Glyph::B, "Close", 0}; }
+        else { prompts[n++] = {art::Glyph::DLeft, "Change", 0}; prompts[n++] = {art::Glyph::A, "Select", 0}; prompts[n++] = {art::Glyph::B, "Close", 0}; }
+        float widths[8]{};
+        auto total = [&] {
+            float sum = 0;
+            for (unsigned i = 0; i < n; ++i) sum += widths[i] + 36;
+            return sum;
+        };
+        for (unsigned i = 0; i < n; ++i) widths[i] = host.TextWidth(Font::Hud, prompts[i].label, 1);
+        while (n > 1 && total() > width - 16) {
+            unsigned drop = n;
+            for (unsigned i = 0; i < n; ++i)
+                if (prompts[i].priority && (drop == n || prompts[i].priority >= prompts[drop].priority)) drop = i;
+            if (drop == n) break;
+            for (unsigned i = drop + 1; i < n; ++i) { prompts[i - 1] = prompts[i]; widths[i - 1] = widths[i]; }
+            --n;
+        }
         float x = width - 8;
         const float y = height - 15;
         for (unsigned i = n; i-- > 0;) {
-            const float textWidth = static_cast<float>(std::strlen(prompts[i].label)) * 5.2f;
-            x -= textWidth;
+            x -= widths[i];
             out.Text(Font::Hud, prompts[i].label, x, y + 3, Paper, 1, alpha);
             x -= 26;
             out.Art(art::Button.name, static_cast<int>(prompts[i].glyph), x - 4, y, 1, alpha);
             x -= 10;
         }
     }
-    void PaintToast(PaintList& out, float width, float height, std::uint64_t now) {
+    // A short dark strip above the prompts; long messages wrap onto two lines.
+    void PaintToast(Host& host, PaintList& out, float width, float height, std::uint64_t now) {
         if (!toast_[0] || now - toastAt_ > ToastMs) return;
         const auto age = now - toastAt_;
         const float in = anim::EaseOutCubic(anim::Progress(now, toastAt_, Duration(150)));
         const float fade = age > ToastMs - 300 ? static_cast<float>(ToastMs - age) / 300.f : 1.f;
-        const float w = static_cast<float>(std::strlen(toast_)) * 5.4f + 20, y = height - 40 + (1 - in) * 12;
-        out.Rect(width * .5f - w * .5f, y - 3, width * .5f + w * .5f, y + 12, 0x140d0c, .82f * fade);
-        out.Text(Font::Hud, toast_, width * .5f, y, Paper, 1, fade, Align::Center);
+        constexpr float MaxLine = 300;
+        char lines[2][sizeof(toast_)]{};
+        std::snprintf(lines[0], sizeof(lines[0]), "%s", toast_);
+        unsigned count = 1;
+        if (host.TextWidth(Font::Hud, toast_, 1) > MaxLine) {
+            // Break at the last space that keeps the first line within MaxLine.
+            const unsigned length = static_cast<unsigned>(std::strlen(toast_));
+            unsigned split = 0;
+            for (unsigned i = 1; i < length; ++i) {
+                if (toast_[i] != ' ') continue;
+                char head[sizeof(toast_)];
+                std::snprintf(head, sizeof(head), "%.*s", static_cast<int>(i), toast_);
+                if (host.TextWidth(Font::Hud, head, 1) <= MaxLine) split = i; else break;
+            }
+            if (split) {
+                std::snprintf(lines[0], sizeof(lines[0]), "%.*s", static_cast<int>(split), toast_);
+                std::snprintf(lines[1], sizeof(lines[1]), "%s", toast_ + split + 1);
+                count = 2;
+            }
+        }
+        float w = 0;
+        for (unsigned i = 0; i < count; ++i) {
+            const float lw = host.TextWidth(Font::Hud, lines[i], 1);
+            if (lw > w) w = lw;
+        }
+        if (w > MaxLine) w = MaxLine;
+        w += 20;
+        const float lineHeight = 12, y = height - 40 - lineHeight * static_cast<float>(count - 1) + (1 - in) * 12;
+        out.Rect(width * .5f - w * .5f, y - 3, width * .5f + w * .5f, y + lineHeight * static_cast<float>(count), 0x140d0c, .82f * fade);
+        for (unsigned i = 0; i < count; ++i)
+            out.Text(Font::Hud, lines[i], width * .5f, y + lineHeight * static_cast<float>(i), Paper, 1, fade, Align::Center, MaxLine);
     }
-    // A just-changed value on the selected row "stamps" in from 135%.
-    void PaintRowValue(PaintList& out, const Row& r, float right, float y, float alpha, std::uint64_t now, bool animate) {
+    // A just-changed value on the selected row "stamps" in from 135%. room is
+    // the width left beside the label (0 = no limit).
+    void PaintRowValue(Host& host, PaintList& out, const Row& r, float right, float y, float alpha, std::uint64_t now, bool animate,
+                       float room = 0) {
         const float stamp = animate ? 1 + .35f * (1 - anim::EaseOutCubic(anim::Progress(now, stampAt_, Duration(140)))) : 1.f;
         switch (r.kind) {
         case RowKind::Toggle:
             out.Text(Font::Ink, r.value ? "ON" : "OFF", right, y, r.value ? InkGood : InkFaint, .62f * stamp, alpha, Align::Right);
             break;
         case RowKind::Choice: {
+            // Drop the arrows before shortening the value itself.
+            const char* value = r.choices ? r.choices[r.value] : "";
             char text[48];
-            std::snprintf(text, sizeof(text), "< %s >", r.choices ? r.choices[r.value] : "");
-            out.Text(Font::Ink, text, right, y, Ink, .58f, alpha, Align::Right);
+            std::snprintf(text, sizeof(text), "< %s >", value);
+            if (room > 0 && host.TextWidth(Font::Ink, text, .58f) > room) std::snprintf(text, sizeof(text), "%s", value);
+            out.Text(Font::Ink, text, right, y, Ink, .58f, alpha, Align::Right, room);
             break;
         }
         case RowKind::Slider: {
             const int frame = r.max > r.min ? (r.value - r.min) * 10 / (r.max - r.min) : 0;
             out.Art(art::Slider.name, frame, right - 48, y, .75f, alpha);
-            out.Format(Font::Small, right - 52, y + 2, Ink, 1, alpha, Align::Right, "%d%%", r.value);
+            out.Format(Font::Small, right - 52, y + 2, Ink, 1, alpha, Align::Right, 30, "%d%%", r.value);
             break;
         }
         case RowKind::Action:
-            if (r.actionText) out.Text(Font::Ink, r.actionText, right, y, InkFaint, .55f, alpha, Align::Right);
+            if (r.actionText) out.Text(Font::Ink, r.actionText, right, y, InkFaint, .55f, alpha, Align::Right, room);
             break;
         }
     }
@@ -734,13 +933,13 @@ private:
             const float ry = ly + 50 + 15.f * (i - first);
             const bool available = host.ModAvailable(i), selected = i == modSelection_;
             if (selected) out.Rect(lx + 30, ry - 2, lx + 230, ry + 12, Ink, .07f * f.alpha);
-            out.Text(Font::Ink, host.ModName(i), lx + 36, ry, available ? (selected ? InkStrong : Ink) : InkFaint, .58f, f.alpha, Align::Left, 150);
+            out.Text(Font::Ink, host.ModName(i), lx + 36, ry, available ? (selected ? InkStrong : Ink) : InkDisabled, .58f, f.alpha, Align::Left, 150);
             Row toggle{nullptr, RowKind::Toggle, host.ModEnabled(i) ? 1 : 0};
-            if (!available) out.Text(Font::Ink, "--", lx + 226, ry, InkFaint, .58f, f.alpha, Align::Right);
-            else PaintRowValue(out, toggle, lx + 226, ry, f.alpha, f.now, selected);
+            if (!available) out.Text(Font::Ink, "--", lx + 226, ry, InkDisabled, .58f, f.alpha, Align::Right);
+            else PaintRowValue(host, out, toggle, lx + 226, ry, f.alpha, f.now, selected);
         }
         Cursor(out, lx + 26, ly + 55 + 15.f * cursorY_, f.alpha, Bob(f.now));
-        if (count > ModRows) out.Format(Font::Small, lx + 128, ly + 206, InkFaint, 1, f.alpha, Align::Center, "%u / %u", modSelection_ + 1, count);
+        if (count > ModRows) out.Format(Font::Small, lx + 128, ly + 206, InkFaint, 1, f.alpha, Align::Center, 120, "%u / %u", modSelection_ + 1, count);
         // Right page: description and status, or the settings rows.
         const float rx = f.x + 262, ry = f.y + 40 + f.riseRight;
         out.Art(art::StatsBlank.name, 0, rx, ry, 1, f.appear);
@@ -760,7 +959,7 @@ private:
         Row rows[8];
         const unsigned n = BuildRows(f.host, page, rows);
         if (titled) {
-            const char* titles[] = {"", "Hit Counter", "Time Machine", "Item Descriptions", "Menu"};
+            const char* titles[] = {"", "Hit Counter", "Time Machine", "Item Descriptions", "Menu", "Repentance+ Rules"};
             out.Text(Font::Ink, titles[static_cast<unsigned>(page)], x + 20, y + 14, InkStrong, .62f, f.alpha);
         }
         const float top = y + (titled ? 34 : 0);
@@ -769,9 +968,12 @@ private:
             const float ry = top + 16.f * i;
             const bool selected = i == rowSelection_;
             if (selected) out.Rect(x + 16, ry - 2, x + 186, ry + 12, Ink, .07f * f.alpha);
-            out.Text(Font::Ink, rows[i].label, x + 22, ry, selected ? InkStrong : Ink, .55f, f.alpha, Align::Left,
-                     rows[i].kind == RowKind::Slider ? 76.f : 92.f);
-            PaintRowValue(out, rows[i], x + 182, ry, f.alpha, f.now, selected);
+            // The label keeps up to 92 px (76 beside a slider); the value gets the rest.
+            const float labelRoom = rows[i].kind == RowKind::Slider ? 76.f : 92.f;
+            float label = f.host.TextWidth(Font::Ink, rows[i].label, .55f);
+            if (label > labelRoom) label = labelRoom;
+            out.Text(Font::Ink, rows[i].label, x + 22, ry, selected ? InkStrong : Ink, .55f, f.alpha, Align::Left, labelRoom);
+            PaintRowValue(f.host, out, rows[i], x + 182, ry, f.alpha, f.now, selected, 182 - 22 - label - 8);
         }
         if (n) Cursor(out, x + 14, top + 5 + 16.f * rowCursor_, f.alpha, Bob(f.now));
         if (rowSelection_ < n && rows[rowSelection_].help)
@@ -790,13 +992,20 @@ private:
             std::snprintf(summary, sizeof(summary), "%s - %s - %s - %s", CategoryNames[0], TypeNames[type_], quality,
                           pool_ < 0 ? "any pool" : cat::PoolNames[pool_]);
         else std::snprintf(summary, sizeof(summary), "%s", CategoryNames[static_cast<unsigned>(category_)]);
+        if (search_[0]) {
+            char filters[sizeof(summary)];
+            std::snprintf(filters, sizeof(filters), "%s", summary);
+            std::snprintf(summary, sizeof(summary), "\"%s\" - %s", search_, filters);
+        }
         out.Text(Font::Small, summary, px + 30, py + 50, InkFaint, 1, f.alpha, Align::Left, 250);
         const unsigned per = PerPage(), page = visibleCount_ ? selection_ / per : 0, pages = visibleCount_ ? (visibleCount_ + per - 1) / per : 1;
-        out.Format(Font::Small, px + 356, py + 50, InkFaint, 1, f.alpha, Align::Right, "%s%s  %u/%u",
+        out.Format(Font::Small, px + 356, py + 50, InkFaint, 1, f.alpha, Align::Right, 120, "%s%s  %u/%u",
                    show_ ? ShowNames[show_] : "", show_ ? " -" : "", page + 1, pages);
         if (!visibleCount_) {
-            out.Text(Font::Ink, show_ == 1 ? "No favorites yet. Press Y on an item." : "Nothing matches these filters.",
-                     px + 195, py + 100, InkFaint, .6f, f.alpha, Align::Center);
+            char empty[64];
+            if (search_[0]) std::snprintf(empty, sizeof(empty), "Nothing matches \"%s\".", search_);
+            else std::snprintf(empty, sizeof(empty), "%s", show_ == 1 ? "No favorites yet. Press Y on an item." : "Nothing matches these filters.");
+            out.Text(Font::Ink, empty, px + 195, py + 100, InkFaint, .6f, f.alpha, Align::Center, 330);
         } else if (GridView()) {
             for (unsigned slot = 0; slot < per && page * per + slot < visibleCount_; ++slot) {
                 const unsigned index = page * per + slot;
@@ -839,18 +1048,39 @@ private:
             if (category_ == Category::Collectible || category_ == Category::Trinket)
                 out.Item(v.entry.id, category_ == Category::Trinket, nx + 16, ny + 16 + Float(f.now), 1, f.alpha);
             else if (v.icon) out.Icon(v.icon, nx + 24, ny + 26, f.alpha);
-            out.Text(Font::Ink, v.name, nx + 56, ny + 8, InkStrong, .62f, f.alpha, Align::Left, 200);
+            out.Text(Font::Ink, v.name, nx + 56, ny + 5, InkStrong, .62f, f.alpha, Align::Left, 200);
             if (category_ == Category::Collectible) {
                 char token[12];
                 std::snprintf(token, sizeof(token), "Quality%u", v.quality);
-                out.Icon(token, nx + 268, ny + 9, f.alpha);
+                out.Icon(token, nx + 268, ny + 8, f.alpha);
                 static constexpr const char* kinds[] = {"", "Passive", "Familiar", "Active"};
-                out.Text(Font::Small, kinds[v.kind < 4 ? v.kind : 0], nx + 282, ny + 10, InkFaint, 1, f.alpha);
+                out.Text(Font::Small, kinds[v.kind < 4 ? v.kind : 0], nx + 282, ny + 9, InkFaint, 1, f.alpha);
             }
-            if (const char* markup = host.Describe(v.entry)) out.Description(0, "", markup, nx + 56, ny + 24, 280, 38);
-        }
+            PaintNoteText(f, v.entry, nx, ny);
+        } else descPages_ = 0;
         if (filterOpen_) PaintFilter(f);
+        if (searchOpen_) PaintSearch(f);
         if (popupOpen_) PaintPopup(f, px, py);
+    }
+    // The note fits three lines above its torn bottom edge. Longer text turns
+    // pages by itself every few seconds, LS turns them by hand, and a marker in
+    // the right margin shows there is more.
+    void PaintNoteText(Frame& f, const Entry& entry, float nx, float ny) {
+        constexpr float Width = 262;
+        constexpr unsigned Rows = 3, PageMs = 5000;
+        const char* markup = f.host.Describe(entry);
+        if (!markup) { descPages_ = 0; return; }
+        if (!(entry == descEntry_)) { descEntry_ = entry; descShownAt_ = f.now; descPage_ = 0; descManual_ = false; }
+        const unsigned lines = f.host.DescriptionLines(markup, Width);
+        descPages_ = lines ? (lines + Rows - 1) / Rows : 0;
+        int page = -1;  // line count unknown: the backend turns pages
+        if (descPages_) {
+            if (!descManual_) descPage_ = static_cast<unsigned>((f.now - descShownAt_) / PageMs) % descPages_;
+            page = static_cast<int>(descPage_ % descPages_);
+        }
+        f.out.Description(0, "", markup, nx + 56, ny + 19, Width, 11.f * Rows + 2, page);
+        if (descPages_ > 1)
+            f.out.Format(Font::Small, nx + 338, ny + 41, InkFaint, 1, f.alpha, Align::Right, 18, "%d/%u", page + 1, descPages_);
     }
     void PaintFilter(Frame& f) {
         auto& out = f.out;
@@ -858,25 +1088,56 @@ private:
         out.Rect(0, 0, 2000, 2000, 0x000000, .25f * f.alpha);
         out.Art(art::StatsBlank.name, 0, x, y, 1, f.appear);
         out.Text(Font::Ink, "Filter", x + 20, y + 14, InkStrong, .62f, f.alpha);
-        const char* labels[] = {"Show", "Type", "Quality", "Pool", "Only", "Sort"};
-        char values[6][40];
-        std::snprintf(values[0], 40, "%s", CategoryNames[static_cast<unsigned>(category_)]);
-        std::snprintf(values[1], 40, "%s", TypeNames[type_]);
-        if (quality_ < 0) std::snprintf(values[2], 40, "Any"); else std::snprintf(values[2], 40, "%d", quality_);
-        std::snprintf(values[3], 40, "%s", pool_ < 0 ? "Any" : cat::PoolNames[pool_]);
-        std::snprintf(values[4], 40, "%s", ShowNames[show_]);
-        std::snprintf(values[5], 40, "%s", SortNames[sort_]);
-        for (unsigned i = 0; i < 6; ++i) {
+        const char* labels[FilterRows] = {"Search", "Show", "Type", "Quality", "Pool", "Only", "Sort"};
+        char values[FilterRows][40];
+        std::snprintf(values[0], 40, "%s", search_[0] ? search_ : "None");
+        std::snprintf(values[1], 40, "%s", CategoryNames[static_cast<unsigned>(category_)]);
+        std::snprintf(values[2], 40, "%s", TypeNames[type_]);
+        if (quality_ < 0) std::snprintf(values[3], 40, "Any"); else std::snprintf(values[3], 40, "%d", quality_);
+        std::snprintf(values[4], 40, "%s", pool_ < 0 ? "Any" : cat::PoolNames[pool_]);
+        std::snprintf(values[5], 40, "%s", ShowNames[show_]);
+        std::snprintf(values[6], 40, "%s", SortNames[sort_]);
+        for (unsigned i = 0; i < FilterRows; ++i) {
             const float ry = y + 36 + 17.f * i;
             const bool active = FilterRowActive(i), selected = i == filterRow_;
             if (selected) out.Rect(x + 16, ry - 2, x + 196, ry + 12, Ink, .07f * f.alpha);
-            out.Text(Font::Ink, labels[i], x + 22, ry, active ? Ink : InkFaint, .55f, f.alpha);
+            out.Text(Font::Ink, labels[i], x + 22, ry, active ? Ink : InkDisabled, .55f, f.alpha);
             char text[48];
-            std::snprintf(text, sizeof(text), "< %.39s >", values[i]);
-            out.Text(Font::Ink, text, x + 192, ry, active ? (selected ? InkStrong : Ink) : InkFaint, .52f, f.alpha, Align::Right, 120);
+            if (i == 0) std::snprintf(text, sizeof(text), "%.39s", values[i]);  // A opens the letter board
+            else std::snprintf(text, sizeof(text), "< %.39s >", values[i]);
+            out.Text(Font::Ink, text, x + 192, ry, active ? (selected ? InkStrong : Ink) : InkDisabled, .52f, f.alpha, Align::Right, 120);
         }
         Cursor(out, x + 14, y + 41 + 17.f * filterRow_, f.alpha, Bob(f.now));
-        out.Format(Font::Small, x + 104, y + 146, InkFaint, 1, f.alpha, Align::Center, "%u match%s", visibleCount_, visibleCount_ == 1 ? "" : "es");
+        out.Format(Font::Small, x + 104, y + 156, InkFaint, 1, f.alpha, Align::Center, 170, "%u match%s", visibleCount_, visibleCount_ == 1 ? "" : "es");
+    }
+    void PaintSearch(Frame& f) {
+        auto& out = f.out;
+        const float x = f.x + 136, y = f.y + 46;
+        out.Rect(0, 0, 2000, 2000, 0x000000, .25f * f.alpha);
+        out.Art(art::StatsBlank.name, 0, x, y, 1, f.appear);
+        out.Text(Font::Ink, "Search", x + 20, y + 14, InkStrong, .62f, f.alpha);
+        // What has been typed so far, on a ruled line, with a blinking caret.
+        out.Rect(x + 20, y + 47, x + 188, y + 48, Ink, .5f * f.alpha);
+        char typed[sizeof(search_) + 2];
+        const bool caret = reduceMotion_ || (f.now / 500) % 2 == 0;
+        std::snprintf(typed, sizeof(typed), "%s%s", search_, caret ? "_" : "");
+        if (search_[0] || caret) out.Text(Font::Ink, typed, x + 22, y + 33, InkStrong, .6f, f.alpha, Align::Left, 164);
+        else out.Text(Font::Ink, "Type a name or ID", x + 22, y + 33, InkFaint, .55f, f.alpha, Align::Left, 164);
+        for (unsigned key = 0; key < SearchLetters; ++key) {
+            const float kx = x + 22 + 19.f * (key % SearchColumns), ky = y + 56 + 16.f * (key / SearchColumns);
+            const bool selected = key == searchCursor_;
+            if (selected) out.Rect(kx - 3, ky - 2, kx + 13, ky + 12, Ink, .14f * f.alpha);
+            const char label[2] = {SearchKeys[key], 0};
+            out.Text(Font::Ink, label, kx + 5, ky, selected ? InkStrong : Ink, selected ? .62f : .55f, f.alpha, Align::Center);
+        }
+        static constexpr const char* wide[] = {"Space", "Delete", "Done"};
+        for (unsigned i = 0; i < 3; ++i) {
+            const float kx = x + 22 + 57.f * i, ky = y + 56 + 16.f * SearchLetterRows + 2;
+            const bool selected = KeySpace + i == searchCursor_;
+            out.Rect(kx - 3, ky - 2, kx + 51, ky + 12, Ink, (selected ? .14f : .05f) * f.alpha);
+            out.Text(Font::Ink, wide[i], kx + 24, ky, selected ? InkStrong : Ink, .52f, f.alpha, Align::Center, 52);
+        }
+        out.Format(Font::Small, x + 104, y + 156, InkFaint, 1, f.alpha, Align::Center, 170, "%u match%s", visibleCount_, visibleCount_ == 1 ? "" : "es");
     }
     void PaintPopup(Frame& f, float px, float py) {
         auto& out = f.out;
@@ -940,7 +1201,7 @@ private:
             const auto raw = info.history[historyPage_ * per + i];
             out.Item(raw & 0x7fff, (raw & 0x8000) != 0, rx + 18 + 29.f * (i % 6), ry + 32 + 29.f * (i / 6), .9f, f.alpha);
         }
-        if (pages > 1) out.Format(Font::Small, rx + 104, ry + 122, InkFaint, 1, f.alpha, Align::Center, "%u / %u", historyPage_ + 1, pages);
+        if (pages > 1) out.Format(Font::Small, rx + 104, ry + 122, InkFaint, 1, f.alpha, Align::Center, 120, "%u / %u", historyPage_ + 1, pages);
         // Transformation progress counted from the same history.
         unsigned forms[FormCount]{};
         for (unsigned i = 0; i < info.historyCount; ++i) {
@@ -968,7 +1229,7 @@ private:
             const float ry = ly + 34 + 15.f * i;
             const bool selected = i == toolSelection_;
             if (selected) out.Rect(lx + 16, ry - 2, lx + 192, ry + 12, Ink, .07f * f.alpha);
-            out.Text(Font::Ink, ToolNames[i], lx + 22, ry, usable ? (selected ? InkStrong : Ink) : InkFaint, .55f, f.alpha);
+            out.Text(Font::Ink, ToolNames[i], lx + 22, ry, usable ? (selected ? InkStrong : Ink) : InkDisabled, .55f, f.alpha);
         }
         Cursor(out, lx + 14, ly + 39 + 15.f * toolCursor_, f.alpha, Bob(f.now));
         const float rx = f.x + 250, ry = f.y + 40 + f.riseRight;
@@ -988,16 +1249,19 @@ private:
         out.Text(Font::Ink, "Saved automatically", rx + 20, ry + 16, InkStrong, .55f, f.alpha);
         out.Description(0, "", "Menu, mod and hit counter choices, favorites and recent items are saved with your game and come back next time you play.", rx + 20, ry + 36, 170, 100);
     }
-    void PaintMove(PaintList& out, float width, float height, std::uint64_t now) {
+    void PaintMove(Host& host, PaintList& out, float width, float height, std::uint64_t now) {
         screenW_ = width; screenH_ = height;
         out.Rect(0, 0, width, height, 0x000000, .25f);
         out.HitCounter(1, true);
-        const float w = 300, x = width * .5f - w * .5f, y = height - 34 + (reduceMotion_ ? 0 : anim::Wave(now, 1400) * 1.f);
+        static constexpr const char* move = "Move (hold to go faster)";
+        const float moveW = host.TextWidth(Font::Hud, move, 1), doneW = host.TextWidth(Font::Hud, "Done", 1);
+        const float w = 38 + moveW + 12 + 32 + doneW + 10, x = width * .5f - w * .5f;
+        const float y = height - 34 + (reduceMotion_ ? 0 : anim::Wave(now, 1400) * 1.f);
         out.Rect(x, y, x + w, y + 22, 0x140d0c, .85f);
         out.Art(art::Button.name, static_cast<int>(art::Glyph::DLeft), x + 6, y + 3, 1, 1);
-        out.Text(Font::Hud, "Move (hold to go faster)", x + 38, y + 7, Paper, 1, 1);
-        out.Art(art::Button.name, static_cast<int>(art::Glyph::A), x + 196, y + 3, 1, 1);
-        out.Text(Font::Hud, "Done", x + 228, y + 7, Paper, 1, 1);
+        out.Text(Font::Hud, move, x + 38, y + 7, Paper, 1, 1);
+        out.Art(art::Button.name, static_cast<int>(art::Glyph::A), x + 38 + moveW + 12, y + 3, 1, 1);
+        out.Text(Font::Hud, "Done", x + 38 + moveW + 44, y + 7, Paper, 1, 1);
     }
 
     // ---------- state ----------
@@ -1008,7 +1272,9 @@ private:
     Category category_{};
     std::uint8_t type_{}, show_{}, sort_{};
     std::int8_t quality_{-1}, pool_{-1};
-    bool open_{}, closing_{}, filterOpen_{}, popupOpen_{}, moving_{}, reduceMotion_{};
+    bool open_{}, closing_{}, filterOpen_{}, popupOpen_{}, moving_{}, reduceMotion_{}, searchOpen_{};
+    char search_[24]{}, searchKey_[24]{};  // as typed; normalized for matching
+    unsigned searchCursor_{};
     unsigned selection_{}, modSelection_{}, rowSelection_{}, toolSelection_{}, filterRow_{}, popupRow_{}, historyPage_{};
     unsigned visibleCount_{};
     Visible visible_[MaxVisible]{};
@@ -1018,5 +1284,9 @@ private:
     float tabDirection_{1}, cursorY_{}, rowCursor_{}, toolCursor_{}, gridX_{}, gridY_{};
     float screenW_{480}, screenH_{270};
     char toast_[96]{};
+    Entry descEntry_{};
+    unsigned descPage_{}, descPages_{};
+    bool descManual_{};
+    std::uint64_t descShownAt_{};
 };
 }

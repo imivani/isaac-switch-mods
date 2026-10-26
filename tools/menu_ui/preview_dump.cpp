@@ -3,26 +3,32 @@
 #include "menu.hpp"
 #include <cstdio>
 #include <cstring>
+#include <map>
 #include <string>
 
 using namespace isaac::menu_ui;
+
+// Glyph advances exported by `preview.py --metrics` (font, code, advance), so
+// layout measures text like the game. Without the file, Host's estimate is used.
+std::map<std::pair<int, int>, float> g_Advance;
 
 struct PreviewHost final : Host {
     std::uint64_t now = 100000;
     bool inRun = true;
     Prefs prefs;
-    std::uint32_t enabled = 0x1fff & ~(1u << 9);
+    std::uint32_t enabled = 0x3fff & ~(1u << 9);
+    const char* description = "{{ArrowUp}} {{Damage}} +1 Damage#{{ArrowUp}} {{Tears}} +0.7 Tears#Spectral, homing shots";
     std::uint64_t Now() override { return now; }
     bool InRun() override { return inRun; }
-    unsigned ModCount() override { return 13; }
+    unsigned ModCount() override { return 14; }
     bool ModAvailable(unsigned) override { return true; }
     bool ModEnabled(unsigned m) override { return enabled & (1u << m); }
     void ToggleMod(unsigned m) override { enabled ^= 1u << m; }
     const char* ModName(unsigned m) override {
         static const char* names[] = {"External Item Descriptions", "Hit Counter", "Enhanced Boss Bars", "Planetarium Chance",
             "Regret Pedestals", "Time Machine", "Machine Lock", "Greed Machine Never Jams", "Instant Fires and Poops",
-            "Specialist Dance", "Animated Items", "Unique Birthright", "Clean Minimap"};
-        return names[m % 13];
+            "Specialist Dance", "Animated Items", "Unique Birthright", "Clean Minimap", "Repentance+ Rules"};
+        return names[m % 14];
     }
     const char* ModDescription(unsigned m) override {
         return m == 1 ? "Count the hits you take this run and on this floor. Press Y here to move it and change its size and opacity."
@@ -45,7 +51,45 @@ struct PreviewHost final : Host {
     }
     bool Owned(unsigned) override { return false; }
     void Sound(unsigned, float) override {}
-    const char* Describe(const Entry&) override { return "{{ArrowUp}} {{Damage}} +1 Damage#{{ArrowUp}} {{Tears}} +0.7 Tears#Spectral, homing shots"; }
+    const char* Describe(const Entry&) override { return description; }
+    float TextWidth(Font font, const char* text, float scale) override {
+        if (g_Advance.empty()) return Host::TextWidth(font, text, scale);
+        const int f = static_cast<int>(font);
+        float width = 0;
+        for (const char* c = text; c && *c; ++c) {
+            auto it = g_Advance.find({f, static_cast<unsigned char>(*c)});
+            width += it != g_Advance.end() ? it->second : 6;
+        }
+        return f == static_cast<int>(Font::Small) ? width : width * scale;  // Small text is drawn unscaled
+    }
+    // Word-wrapped like preview.py's description(), with icons and colours dropped.
+    unsigned DescriptionLines(const char* markup, float width) override {
+        if (g_Advance.empty() || !markup) return 0;
+        unsigned lines = 0;
+        std::string paragraph;
+        auto flush = [&] {
+            float used = 0;
+            bool any = false;
+            std::size_t i = 0;
+            while (i < paragraph.size()) {
+                while (i < paragraph.size() && paragraph[i] == ' ') ++i;
+                std::size_t j = i;
+                while (j < paragraph.size() && paragraph[j] != ' ') ++j;
+                if (j == i) break;
+                const std::string word = paragraph.substr(i, j - i);
+                i = j;
+                if (word.rfind("{{", 0) == 0) continue;
+                const float w = TextWidth(Font::Small, (word + " ").c_str(), 1);
+                if (any && used + w > width) { ++lines; used = 0; }
+                used += w; any = true;
+            }
+            if (any) ++lines;
+            paragraph.clear();
+        };
+        for (const char* c = markup; *c; ++c) { if (*c == '#') flush(); else paragraph += *c; }
+        flush();
+        return lines;
+    }
     void HitCounterSize(float& w, float& h) override { w = 102 * prefs.hitSize / 100.f; h = 10 * prefs.hitSize / 100.f; }
 };
 
@@ -84,6 +128,14 @@ void Press(std::uint32_t b) {
     menu.Update(host, 0, host.now += 40);
 }
 int main(int argc, char** argv) {
+    if (argc > 2) {
+        if (FILE* metrics = std::fopen(argv[2], "r")) {
+            int font{}, code{};
+            float advance{};
+            while (std::fscanf(metrics, "%d %d %f", &font, &code, &advance) == 3) g_Advance[{font, code}] = advance;
+            std::fclose(metrics);
+        }
+    }
     out = std::fopen(argc > 1 ? argv[1] : "paints.json", "w");
     std::fprintf(out, "[");
     host.prefs.lastTab = 0;
@@ -95,6 +147,27 @@ int main(int argc, char** argv) {
     for (int i = 0; i < 10; ++i) Press(Bit(Right));
     host.prefs.ToggleFavorite(menu.VisibleAt(3)->entry);
     Dump("items", host.now += 2000);
+    // Search: the letter board over a live-filtered list.
+    Press(Bit(RS));
+    Press(Bit(Right)); Press(Bit(A));                                    // B
+    Press(Bit(Down)); Press(Bit(Right)); Press(Bit(Right)); Press(Bit(Right)); Press(Bit(Right)); Press(Bit(Right));
+    Press(Bit(Right)); Press(Bit(Right)); Press(Bit(A));                 // R
+    Press(Bit(Up)); Press(Bit(A));                                       // I
+    Dump("items-search", host.now += 600);
+    Press(Bit(RS));
+    Dump("items-search-results", host.now += 600);
+    Press(Bit(X)); Press(Bit(Up)); Press(Bit(Left)); Press(Bit(B));      // clear the search from the filter card
+    // A long, coloured description turns pages; LS turns them by hand.
+    host.description = "{{Collectible118}} {{ColorRed}}Brimstone{{CR}} replaces your tears with a {{ColorYellow}}chargeable blood beam{{CR}}"
+        "#{{Damage}} The beam deals {{ColorLime}}13 times{{CR}} your damage over its duration"
+        "#{{Blank}} {{ColorBlue}}Blue{{CR}}, {{ColorGray}}gray{{CR}}, {{ColorCyan}}cyan{{CR}}, {{ColorGold}}gold{{CR}} and {{ColorShinyPurple}}shiny purple{{CR}} keywords keep their colour"
+        "#Synergises with most tear modifiers and many familiars, which then fire short beams of their own";
+    Press(Bit(Right));
+    Dump("items-description-page1", host.now += 600);
+    Press(Bit(LS));
+    Dump("items-description-page2", host.now += 600);
+    host.description = "{{ArrowUp}} {{Damage}} +1 Damage#{{ArrowUp}} {{Tears}} +0.7 Tears#Spectral, homing shots";
+    Press(Bit(Left));
     Press(Bit(A));
     Dump("items-action", host.now += 600);
     Press(Bit(B));
@@ -112,6 +185,10 @@ int main(int argc, char** argv) {
     Press(Bit(Y));
     Press(Bit(Down)); Press(Bit(Down));
     Dump("mods-hitcounter", host.now += 600);
+    Press(Bit(B));
+    for (int i = 0; i < 12; ++i) Press(Bit(Down));   // Repentance+ Rules
+    Press(Bit(Y)); Press(Bit(Down));
+    Dump("mods-rplus", host.now += 600);
     Press(Bit(B));
     Press(Bit(R));
     Dump("run", host.now += 2000);

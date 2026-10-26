@@ -1,6 +1,8 @@
 #pragma once
+#include "paint.hpp"
 #include "prefs.hpp"
 #include <cstdint>
+#include <cstring>
 
 // Everything the menu needs from the game, behind one interface. The Switch
 // backend implements it with verified native calls; host tests use a fake.
@@ -46,6 +48,14 @@ public:
     virtual const char* Describe(const Entry& entry) = 0;
     // Current hit counter text box size at the current settings.
     virtual void HitCounterSize(float& width, float& height) = 0;
+    // Drawn width of a Text paint. The Switch measures with the game's fonts;
+    // this estimate is for fakes that do not care.
+    virtual float TextWidth(Font font, const char* text, float scale) {
+        const float letter = font == Font::Ink || font == Font::InkLarge ? 8.f : 5.2f;
+        return text ? static_cast<float>(std::strlen(text)) * letter * scale : 0.f;
+    }
+    // Lines EID markup takes in a Description box this wide (0 = unknown).
+    virtual unsigned DescriptionLines(const char* markup, float width) { (void)markup; (void)width; return 0; }
 protected:
     // Never deleted through the interface (no heap use in the Switch module).
     ~Host() = default;
@@ -53,7 +63,7 @@ protected:
 
 // Mod indices with settings pages (match ModFeature in mod_settings.hpp).
 namespace mods {
-inline constexpr unsigned Eid = 0, HitCounter = 1, TimeMachine = 5, MachineLock = 6;
+inline constexpr unsigned Eid = 0, HitCounter = 1, TimeMachine = 5, MachineLock = 6, RepentancePlus = 13;
 }
 // The game's own sound effects (index into sounds.xml).
 namespace sound {
