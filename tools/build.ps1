@@ -61,7 +61,7 @@ if($Mode -in @('combined-polished','combined-expanded','combined-extended','comb
     & $taskPython (Join-Path $PSScriptRoot 'package_ui.py') --mode $Mode
     if($LASTEXITCODE -ne 0){throw 'UI resource packaging failed'}
 }
-$taskReadme=if($Mode -eq 'combined-menu'){'docs\iteration-7-testing.md'}elseif($Mode -eq 'combined-balance'){'docs\iteration-6-testing.md'}elseif($Mode -eq 'combined-plus'){'docs\iteration-5-testing.md'}elseif($Mode -eq 'combined-refined'){'docs\iteration-4-testing.md'}elseif($Mode -eq 'combined-extended'){'docs\iteration-3-testing.md'}elseif($Mode -eq 'combined-expanded'){'docs\iteration-2-testing.md'}else{'docs\console-testing.md'}
+$taskReadme=if($Mode -eq 'combined-menu'){'docs\iteration-8-testing.md'}elseif($Mode -eq 'combined-balance'){'docs\iteration-6-testing.md'}elseif($Mode -eq 'combined-plus'){'docs\iteration-5-testing.md'}elseif($Mode -eq 'combined-refined'){'docs\iteration-4-testing.md'}elseif($Mode -eq 'combined-extended'){'docs\iteration-3-testing.md'}elseif($Mode -eq 'combined-expanded'){'docs\iteration-2-testing.md'}else{'docs\console-testing.md'}
 Copy-Item -LiteralPath (Join-Path $taskProject $taskReadme) -Destination (Join-Path $taskPackage 'READ BEFORE TESTING.md')
 if($Mode -in @('combined-expanded','combined-extended','combined-refined','combined-plus','combined-balance','combined-menu')){
     $taskPackageDocs=Join-Path $taskPackage 'docs'
@@ -94,7 +94,7 @@ if($Mode -in @('combined-balance','combined-menu')){
     }
 }
 if($Mode -eq 'combined-menu'){
-    foreach($taskName in @('iteration-7.md','iteration-7-testing.md','mod-menu.md')){
+    foreach($taskName in @('iteration-7.md','iteration-7-testing.md','mod-menu.md','iteration-8.md','iteration-8-testing.md','rplus-port.md')){
         Copy-Item -LiteralPath (Join-Path $taskProject ('docs\'+$taskName)) -Destination (Join-Path $taskPackageDocs $taskName)
     }
 }
